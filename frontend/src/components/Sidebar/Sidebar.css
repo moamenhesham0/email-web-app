@@ -1,0 +1,29 @@
+.sidebar {
+    flex: 0.3;
+    max-width: 300px;
+    padding-right: 20px;
+}
+
+.sidebar-compose {
+    margin-top: 15px !important;
+    margin-right: 150px !important;
+    margin-bottom: 15px !important;
+    text-transform: capitalize !important;
+    color: grey;
+    padding: 15px 20px !important;
+    border-radius: 30px !important;
+    box-shadow: 0px 2px 5px -2px rgb(0, 0, 0, 0.75);
+}
+
+
+.sidebar-link{
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 500px) {
+
+    .sidebar-compose{
+        margin-left: 3px !important;
+        padding: 10px 8px !important;
+    }
+}

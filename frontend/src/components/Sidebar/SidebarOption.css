@@ -1,0 +1,52 @@
+.sidebarOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures number is at the far right */
+    height: 50px; /* Fixed height for uniform size */
+    width: 100%; /* Takes full width of the container */
+    padding: 0 15px; /* Adds some padding inside the button */
+    border-radius: 20px;
+    cursor: pointer;
+    color: #818181;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box; /* Ensures padding is included in the width/height */
+}
+
+.sidebarOption:hover,
+.sidebarOption:focus,
+.sidebarOption--active {
+    background-color: #fcecec;
+    color: #c04b37;
+    font-weight: 800;
+}
+
+.sidebarOption__icon {
+    flex-shrink: 0; /* Prevents the icon from shrinking */
+    margin-right: 10px;
+}
+
+.sidebarOption__title {
+    margin-inline-end: auto; 
+}
+
+.sidebarOption__number {
+    min-width: 40px; /* Ensures a consistent width for alignment */
+    font-weight: bold;
+    color: #818181;
+    text-align: right;
+    transition: color 0.3s;
+}
+
+.sidebarOption--active .sidebarOption__number,
+.sidebarOption:hover .sidebarOption__number {
+    color: #c04b37;
+}
+
+@media only screen and (max-width: 500px) {   
+    .sidebarOption__icon {
+        display: none;
+    }
+}
