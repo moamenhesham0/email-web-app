@@ -1,4 +1,4 @@
-package emailPackend.example.backend;
+package emailBackend.example.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
