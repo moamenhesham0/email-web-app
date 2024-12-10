@@ -6,7 +6,7 @@ public class Attachment {
     private byte[] attachment;
     private String attType;
     private String attName;
-
+    private float attSize;
     public String getAttName() {
         return attName;
     }
@@ -15,13 +15,6 @@ public class Attachment {
         this.attName = attName;
     }
 
-   
-
-    @Override
-    public String toString() {
-        return "Attachment [attachment=" + Arrays.toString(attachment) + ", attType=" + attType + ", attName=" + attName
-                + "]";
-    }
 
     public byte[] getAttachment() {
         return attachment;
@@ -38,4 +31,22 @@ public class Attachment {
     public void setAttType(String attType) {
         this.attType = attType;
     }
+
+    public float getAttSize() {
+        return attSize;
+    }
+
+    public void setAttSize(float attSize) {
+        this.attSize = attSize;
+    }
+
+    @Override
+    public String toString() {
+        return "Attachment [attachment=" + Arrays.toString(attachment) + ", attType=" + attType + ", attName=" + attName
+                + ", attSize=" + attSize + "]";
+    }
+
+    
+    
+
 }
