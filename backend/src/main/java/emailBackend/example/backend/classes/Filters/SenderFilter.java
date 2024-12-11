@@ -4,11 +4,11 @@ import java.util.*;
 import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.interfaces.Filter;
 
-class SenderFilter implements Filter {
+public class SenderFilter implements Filter {
     @Override
     public List<Email> filter(List<Email> emails , String sender)
     {
-        List<Email> filteredEmails = new List<>();
+        List<Email> filteredEmails = new ArrayList<>();
         for(Email email : emails)
         {
             if(email.getSender().equalsIgnoreCase(sender))
