@@ -1,8 +1,9 @@
 package emailBackend.example.backend.classes.Sort;
 
-import emailBackend.example.backend.classes.*;
 import java.util.Comparator;
-import java.util.*;
+import java.util.List;
+
+import emailBackend.example.backend.classes.Email;
 
 public class RecipientSort implements SortStrategy {
     @Override
