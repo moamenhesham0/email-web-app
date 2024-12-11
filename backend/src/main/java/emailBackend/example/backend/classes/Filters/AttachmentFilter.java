@@ -1,7 +1,7 @@
 package emailBackend.example.backend.classes.Filters;
 
 import java.util.*;
-import emailBackend.example.backend.classes.Email;
+import emailBackend.example.backend.classes.*;
 import emailBackend.example.backend.interfaces.Filter;
 
 public class AttachmentFilter implements Filter{
@@ -11,8 +11,14 @@ public class AttachmentFilter implements Filter{
         List<Email> filteredEmails = new ArrayList<>();
         for(Email email : emails)
         {
-            if(email.getAttachments().equalsIgnoreCase(attachmentType))
-                filteredEmails.add(email);
+            for(Attachment attachment : email.getAttachments())
+            {
+                if(attachment.getAttType().equalsIgnoreCase(attachmentType))
+                {
+                    filteredEmails.add(email);
+                    break;
+                }
+            }
         }
         return filteredEmails;
     }

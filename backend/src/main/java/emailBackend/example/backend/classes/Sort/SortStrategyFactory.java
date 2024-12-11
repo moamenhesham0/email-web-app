@@ -1,6 +1,6 @@
 package emailBackend.example.backend.classes.Sort;
 
-public class SortingStrategyFactory {
+public class SortStrategyFactory {
     public SortStrategy getStrategy(String name){
         if(name == null){
             return null;

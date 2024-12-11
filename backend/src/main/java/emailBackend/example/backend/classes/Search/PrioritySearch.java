@@ -1,8 +1,9 @@
 package emailBackend.example.backend.classes.Search;
 
-import emailBackend.example.backend.classes.Email;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import emailBackend.example.backend.classes.Email;
 
 public class PrioritySearch implements SearchStrategy {
     @Override
@@ -15,7 +16,7 @@ public class PrioritySearch implements SearchStrategy {
         }
 
         return emails.stream()
-                .filter(email -> email.getPriority() == priorityLevel)
+                .filter(email -> email.getPriorityInt() == priorityLevel)
                 .collect(Collectors.toList());
     }
 }
