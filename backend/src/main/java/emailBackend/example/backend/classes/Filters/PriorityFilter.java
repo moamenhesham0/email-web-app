@@ -13,7 +13,7 @@ public class PriorityFilter implements Filter{
         List<Email> filteredEmails = new ArrayList<>();
         for(Email email : emails)
         {
-            if(email.getPriorityString().equalsIgnoreCase(priority))
+            if(email.getPriority().getPriorityString().equalsIgnoreCase(priority))
                 filteredEmails.add(email);
         }
         return filteredEmails;
