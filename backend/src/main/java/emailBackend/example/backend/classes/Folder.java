@@ -1,15 +1,23 @@
 package emailBackend.example.backend.classes;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Folder {
+public class Folder implements Serializable {
     
     String folderName ;
-    int readEmails;
-    int unreadEmails;
-    int EmailCount;
-    List<Email> Emails;
+    int readEmails =0 ;
+    int unreadEmails = 0;
+    int EmailCount = 0;
+    List<Email> Emails = new ArrayList<>();
+
+    public Folder(){}
     
+    public Folder(String folderName, List<Email> emails) {
+        this.folderName = folderName;
+        Emails = emails;
+    }
     public String getFolderName() {
         return folderName;
     }

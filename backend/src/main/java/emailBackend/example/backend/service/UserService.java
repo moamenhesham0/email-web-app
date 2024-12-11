@@ -1,13 +1,16 @@
 package emailBackend.example.backend.service;
 
-import java.time.LocalDateTime;
+
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import emailBackend.example.backend.classes.Attachment;
 import emailBackend.example.backend.classes.Email;
+import emailBackend.example.backend.factory.EmailFactory;
 import emailBackend.example.backend.repository.UserRepository;
 
 @Service
@@ -15,10 +18,11 @@ public class UserService {
     @Autowired
     private UserRepository emailRepository;
 
-    public void createEmail(Email email) {
-        email.setId(UUID.randomUUID().toString()); 
-        email.setTimeStamp(LocalDateTime.now());
-
+    @Autowired
+    private EmailFactory emailFactory;
+    
+    public void createEmail(String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments) {
+        Email email = emailFactory.createEmail(senderEmail, recipientEmail,subject ,textBody, attachments);
         emailRepository.save(email);
     }
 
@@ -29,5 +33,11 @@ public class UserService {
     public void deleteEmailById(String id) {
        emailRepository.deleteEmailById(id);
     }
+
+    public void deleteFolderByName(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteFolderByName'");
+    }
+
     
 }

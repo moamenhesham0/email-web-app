@@ -7,22 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Email implements Serializable {
-    // Use thread-safe maps for shared static variables
-    private static final Map<String, Integer> prioritiesToInt = new HashMap<>();
-    private static final Map<Integer, String> prioritiesToString = new HashMap<>();
 
-    static {
-        prioritiesToInt.put("Urgent", 4);
-        prioritiesToInt.put("Important", 3);
-        prioritiesToInt.put("Moderate", 2);
-        prioritiesToInt.put("Minor", 1);
-
-        for (Map.Entry<String, Integer> en : prioritiesToInt.entrySet()) {
-            String key = en.getKey();
-            Integer val = en.getValue();
-            prioritiesToString.put(val, key);
-        }
+public class Email implements Serializable{
+    private static HashMap<String , Integer>  prioritiesToInt = new HashMap<>();
+    private static HashMap<Integer , String>  prioritiesToString = new HashMap<>();
+    static{
+    prioritiesToInt.put("Urgent" , 4);
+    prioritiesToInt.put("Important" , 3);
+    prioritiesToInt.put("Moderate" , 2);
+    prioritiesToInt.put("Minor" , 1);
+    for (Map.Entry<String, Integer> en : prioritiesToInt.entrySet()) {
+        String key = en.getKey();
+        Integer val = en.getValue();
+        prioritiesToString.put(val , key);
+    }
     }
 
     private String sender;
@@ -31,15 +29,23 @@ public class Email implements Serializable {
     private String textBody;
     private LocalDateTime timeStamp;
     private boolean read = false;
-    private List<Attachment> attachments = new ArrayList<>(); // Initialize to empty list
-    private int priority;
-    private String id;
+    private List<Attachment> attachments;
+    private int priority; 
+    private String id ;
 
-    // Getters and setters for sender, recipient, etc.
-    public String getSender() {
-        return this.sender;
+    public Email(){}
+    public Email(String sender, String subject, String textBody) {
+        this.sender = sender;
+        this.subject = subject;
+        this.textBody = textBody;
+    }
+    public int getPriority(){
+        return priority;
     }
 
+    public String getSender() {
+        return sender;
+    }
     public void setSender(String sender) {
         this.sender = sender;
     }
