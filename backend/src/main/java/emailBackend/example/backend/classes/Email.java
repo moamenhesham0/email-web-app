@@ -3,26 +3,12 @@ package emailBackend.example.backend.classes;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 public class Email implements Serializable{
-    private static HashMap<String , Integer>  prioritiesToInt = new HashMap<>();
-    private static HashMap<Integer , String>  prioritiesToString = new HashMap<>();
-    static{
-    prioritiesToInt.put("Urgent" , 4);
-    prioritiesToInt.put("Important" , 3);
-    prioritiesToInt.put("Moderate" , 2);
-    prioritiesToInt.put("Minor" , 1);
-    for (Map.Entry<String, Integer> en : prioritiesToInt.entrySet()) {
-        String key = en.getKey();
-        Integer val = en.getValue();
-        prioritiesToString.put(val , key);
-    }
-    }
-
+   
     private String sender;
     private String recipient;
     private String subject;
@@ -30,7 +16,7 @@ public class Email implements Serializable{
     private LocalDateTime timeStamp;
     private boolean read = false;
     private List<Attachment> attachments;
-    private int priority; 
+    private Priority priority; 
     private String id ;
 
     public Email(){}
@@ -39,12 +25,9 @@ public class Email implements Serializable{
         this.subject = subject;
         this.textBody = textBody;
     }
-    public int getPriority(){
-        return priority;
-    }
 
     public String getSender() {
-        return sender;
+        return this.sender;
     }
     public void setSender(String sender) {
         this.sender = sender;
@@ -106,23 +89,8 @@ public class Email implements Serializable{
         this.attachments = attachments != null ? attachments : new ArrayList<>();
     }
 
-    // Updated setPriority to handle invalid priority strings
-    public void setPriority(String priority) {
-        Integer priorityValue = prioritiesToInt.get(priority);
-        if (priorityValue != null) {
-            this.priority = priorityValue;
-        } else {
-            // Handle invalid priority (set to default value or throw exception)
-            this.priority = 1; // Default to "Minor"
-        }
-    }
-
-    public int getPriorityInt() {
+    public Priority getPriority() {
         return this.priority;
-    }
-
-    public String getPriorityString() {
-        return prioritiesToString.getOrDefault(this.priority, "Unknown");
     }
 
     @Override
