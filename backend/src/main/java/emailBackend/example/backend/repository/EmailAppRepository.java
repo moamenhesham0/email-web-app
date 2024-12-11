@@ -1,10 +1,15 @@
 package emailBackend.example.backend.repository;
 
-import emailBackend.example.backend.classes.User;
-
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import emailBackend.example.backend.classes.User;
 
 public class EmailAppRepository {
 
@@ -35,7 +40,6 @@ public class EmailAppRepository {
         System.out.println(user.toString());
         usersInSystem.put(user.getEmailAddress(), user);
 
-  
         saveUsersToFile();
     }
 

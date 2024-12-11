@@ -19,7 +19,7 @@ public class FiltersController {
 
     private final FiltersService filtersService;
 
-    // Constructor injection for FiltersService
+    
     @Autowired
     public FiltersController(FiltersService filtersService) {
         this.filtersService = filtersService;
