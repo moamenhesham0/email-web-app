@@ -4,7 +4,7 @@ import java.util.*;
 import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.interfaces.Filter;
 
-class AttachmentFilter implements Filter<Email , String> {
+public class AttachmentFilter implements Filter{
     @Override
     public List<Email> filter(List<Email> emails , String attachmentType)
     {
