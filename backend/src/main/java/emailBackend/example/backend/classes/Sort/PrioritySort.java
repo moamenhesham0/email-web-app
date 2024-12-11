@@ -8,6 +8,6 @@ import emailBackend.example.backend.classes.Email;
 public class PrioritySort implements SortStrategy {
     @Override
     public void sort(List<Email> emails) {
-        emails.sort(Comparator.comparing(Email::getPriorityInt));
+        emails.sort(Comparator.comparing(email -> email.getPriority().getPriorityInt()));
     } 
 }

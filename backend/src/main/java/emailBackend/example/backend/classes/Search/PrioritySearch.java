@@ -16,7 +16,7 @@ public class PrioritySearch implements SearchStrategy {
         }
 
         return emails.stream()
-                .filter(email -> email.getPriorityInt() == priorityLevel)
+                .filter(email -> email.getPriority().getPriorityInt() == priorityLevel)
                 .collect(Collectors.toList());
     }
 }
