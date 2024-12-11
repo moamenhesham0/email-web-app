@@ -9,6 +9,15 @@ public class User implements Serializable {
     String emailAddress; 
     List<Folder> folders;
     
+    public User() {}
+    
+    public User(String username, String password, String emailAddress, List<Folder> folders) {
+        this.username = username;
+        this.password = password;
+        this.emailAddress = emailAddress;
+        this.folders = folders;
+    }
+
     public String getUsername() {
         return username;
     }
