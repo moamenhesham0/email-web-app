@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Email implements Serializable{
+<<<<<<< Updated upstream
     private static HashMap<String , Integer>  prioritiesToInt = new Hashmap<>();
     private static HashMap<Integer , String>  prioritiesToString = new Hashmap<>();
     static{
@@ -19,6 +20,8 @@ public class Email implements Serializable{
         prioritiesToString.put(val , key);
     }
     }
+=======
+>>>>>>> Stashed changes
     private String sender;
     private String recipient;
     private String subject;
@@ -28,9 +31,22 @@ public class Email implements Serializable{
     private List<Attachment> attachments;
     private int priority; 
     private String id ;
+    private int priority;
     
+<<<<<<< Updated upstream
     public String getSender() {
         return this.sender;
+=======
+    public int getPriority(){
+        return priority;
+    }
+    public void setPriority(int priority){
+        this.priority = priority;
+    }
+
+    public String getSender() {
+        return sender;
+>>>>>>> Stashed changes
     }
     public void setSender(String sender) {
         this.sender = sender;
@@ -56,7 +72,7 @@ public class Email implements Serializable{
     public String getId() {
         return this.id;
     }
-    
+
     public void setTextBody(String textBody) {
         this.textBody = textBody;
     }
