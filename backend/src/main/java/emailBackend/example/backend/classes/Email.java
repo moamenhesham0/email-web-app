@@ -32,7 +32,7 @@ public class Email implements Serializable{
     public String getId() {
         return id;
     }
-
+    
     public void setTextBody(String textBody) {
         this.textBody = textBody;
     }
