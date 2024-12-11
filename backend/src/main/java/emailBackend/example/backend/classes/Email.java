@@ -1,10 +1,11 @@
 package emailBackend.example.backend.classes;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Email {
+public class Email implements Serializable{
     private String recipient;
     private String subject;
     private String textBody;
@@ -56,16 +57,14 @@ public class Email {
     public void setId(String id) {
         this.id = id;
     }
-
     
-
+    
     @Override
     public String toString() {
         return "Email [recipient=" + recipient + ", subject=" + subject + ", textBody=" + textBody + ", timeStamp="
-                + timeStamp + ", read=" + read + ", attachments=" + attachments + "]";
+                + timeStamp + ", read=" + read + ", attachments=" + attachments + ", id=" + id + "]";
     }
-    
-    
+
 
     
     
