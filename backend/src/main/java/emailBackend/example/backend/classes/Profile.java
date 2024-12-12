@@ -1,15 +1,17 @@
 package emailBackend.example.backend.classes;
 
-public class Profile {
+import java.io.Serializable;
 
-    private static Profile instance; // Singleton instance
-    private User user;               // Logged-in user
-    private boolean isSignin = false; // Sign-in status
+public class Profile implements Serializable{
 
-    // Private constructor to prevent direct instantiation
+    private static Profile instance; 
+    private User user;              
+    private boolean isSignin = false; 
+
+    
     private Profile() {}
 
-    // Public method to get the singleton instance
+
     public static synchronized Profile getInstance() {
         if (instance == null) {
             instance = new Profile();

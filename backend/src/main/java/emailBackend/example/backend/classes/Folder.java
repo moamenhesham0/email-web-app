@@ -12,12 +12,7 @@ public class Folder implements Serializable {
     int EmailCount = 0;
     List<Email> Emails = new ArrayList<>();
 
-    public Folder(){}
-    
-    public Folder(String folderName, List<Email> emails) {
-        this.folderName = folderName;
-        Emails = emails;
-    }
+
     public String getFolderName() {
         return folderName;
     }

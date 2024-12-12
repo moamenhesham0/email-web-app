@@ -1,7 +1,6 @@
 package emailBackend.example.backend.classes;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +12,11 @@ public class Email implements Serializable{
     private String recipient;
     private String subject;
     private String textBody;
-    private LocalDateTime timeStamp;
+    private String timeStamp;
     private boolean read = false;
     private List<Attachment> attachments;
     private Priority priority; 
     private String id ;
-
-    public Email(){}
-    public Email(String sender, String subject, String textBody) {
-        this.sender = sender;
-        this.subject = subject;
-        this.textBody = textBody;
-    }
 
     public String getSender() {
         return this.sender;
@@ -65,11 +57,11 @@ public class Email implements Serializable{
         this.id = id;
     }
 
-    public LocalDateTime getTimeStamp() {
+    public String getTimeStamp() {
         return this.timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
 
