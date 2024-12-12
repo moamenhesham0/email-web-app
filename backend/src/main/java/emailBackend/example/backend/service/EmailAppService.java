@@ -13,13 +13,11 @@ import emailBackend.example.backend.repository.EmailAppRepository;
 public class EmailAppService {
 
     
-
-    private final EmailAppRepository emailAppRepository;
-
     @Autowired
-    public EmailAppService(EmailAppRepository emailAppRepository) {
-        this.emailAppRepository = emailAppRepository;
-    }
+    EmailAppRepository emailAppRepository;
+
+    
+    
 
     public void checkLogin(String email, String password) {
         
@@ -43,6 +41,17 @@ public class EmailAppService {
 
         User user = UserFactory.createUser(userName, password, email);
        emailAppRepository.saveUserInSystem(user);
+    }
+
+    public void signUserOut() {
+        
+        Profile profile = Profile.getInstance();
+
+        profile.signOut();
+        
+        if (profile.getUser() != null) {
+            throw new IllegalStateException("Error signing out");
+        }
     }
 
 }

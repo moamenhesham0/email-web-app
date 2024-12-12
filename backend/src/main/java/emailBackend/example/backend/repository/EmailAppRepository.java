@@ -23,6 +23,18 @@ public class EmailAppRepository {
         usersInSystem = loadUsersFromFile();
     }
 
+
+    public User getUserByEmail(String emailAddress){
+        if (usersInSystem.containsKey(emailAddress)) {
+            User user = usersInSystem.get(emailAddress);
+                System.out.println(user);
+                return user;
+    
+        } else {
+            throw new IllegalStateException("No user found with the provided email.");
+        }
+    }
+    
     public User checkUserExist(String emailAddress, String password) {
         if (usersInSystem.containsKey(emailAddress)) {
             User user = usersInSystem.get(emailAddress);
@@ -39,12 +51,15 @@ public class EmailAppRepository {
 
     public void saveUserInSystem(User user) {
         if (usersInSystem.containsKey(user.getEmailAddress())) {
-            throw new IllegalStateException("This email is already taken.");
+            System.out.println("User exists. Updating user details...");
+        } else {
+            System.out.println("Adding new user...");
         }
+        // Add or update the user
         usersInSystem.put(user.getEmailAddress(), user);
         saveUsersToFile();
     }
-
+    
     private void saveUsersToFile() {
         try {
             objectMapper.writeValue(new File(FILE_PATH), usersInSystem);
