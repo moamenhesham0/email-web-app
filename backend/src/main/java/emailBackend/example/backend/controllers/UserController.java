@@ -25,7 +25,7 @@ import emailBackend.example.backend.service.UserService;
 @RequestMapping("/api/emails")
 public class UserController {
 
-     @Autowired
+ @Autowired
     private UserService userService;
 
     @GetMapping("/getEmail/{folderName}/{id}")

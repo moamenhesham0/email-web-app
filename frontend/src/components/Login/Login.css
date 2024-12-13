@@ -1,0 +1,30 @@
+.login {
+    background-color: #f2f2f2;
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+.login-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container > img {
+    object-fit: contain;
+    height: 200px;
+    background: transparent;
+}
+
+.signin {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .signin a {
+    color: rgb(102, 118, 200);
+  }
+  
+  .signin a:hover {
+    text-decoration: underline rgb(200, 175, 102);
+  }
