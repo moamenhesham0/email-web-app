@@ -1,38 +1,74 @@
 import React from "react";
 import "./SendMail.css";
 import CloseIcon from "@mui/icons-material/Close";
-// import { Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { closeSendMessage } from "../../features/mailSlice";
-import { Button, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-
+import {
+  Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 function SendMail() {
   const [selectedOption, setSelectedOption] = React.useState("Minor");
+
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const dispatch = useDispatch();
 
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("senderEmail", "johndoe@example.com");
+    formData.append("recipientEmail", data.recipientEmail);
+    formData.append("subject", data.subject);
+    formData.append("textBody", data.textBody);
+    formData.append("sendTheEmail", data.sendTheEmail);
+    formData.append("priority", selectedOption); // Include the priority
+    if (data.attachments) {
+      Array.from(data.attachments).forEach((file) =>
+        formData.append("attachments", file)
+      );
+    }
 
+    try {
+      const response = await fetch("http://localhost:8080/api/emails/createEmail", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message || "Failed to send email.");
+      }
+      alert("Email sent successfully!");
+      dispatch(closeSendMessage());
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Error sending email.");
+    }
+  };
 
   return (
     <div className="sendMail">
       <div className="sendMail-header">
         <h3>New Message</h3>
-        <FormControl className="sendMail-dropdown" variant="outlined" size="small">
-          <InputLabel id="option-select-label"></InputLabel>
+        <FormControl className="sendMail-dropdown" size="small">
+          <InputLabel id="option-select-label">Priority</InputLabel>
           <Select
             labelId="option-select-label"
             value={selectedOption}
             onChange={handleOptionChange}
-            label="Select Option"
           >
             <MenuItem value="Minor">Minor</MenuItem>
             <MenuItem value="Moderate">Moderate</MenuItem>
@@ -46,39 +82,51 @@ function SendMail() {
         />
       </div>
 
-      <form >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
-          name="to"
+          name="recipientEmail"
           placeholder="To"
           type="email"
-          {...register("to", { required: true })}
+          {...register("recipientEmail", { required: "Recipient email is required!" })}
         />
-        {errors.to && <p className="sendMail-error">To is Required!</p>}
+        {errors.recipientEmail && (
+          <p className="sendMail-error">{errors.recipientEmail.message}</p>
+        )}
         <input
           name="subject"
           placeholder="Subject"
           type="text"
-          {...register("subject", { required: true })}
+          {...register("subject", { required: "Subject is required!" })}
         />
         {errors.subject && (
-          <p className="sendMail-error">Subject is Required!</p>
+          <p className="sendMail-error">{errors.subject.message}</p>
         )}
         <input
-          name="message"
+          name="textBody"
           placeholder="Message"
           type="text"
           className="sendMail-message"
-          {...register("message", { required: true })}
+          {...register("textBody", { required: "Message is required!" })}
         />
-        {errors.message && (
-          <p className="sendMail-error">Message is Required!</p>
+        {errors.textBody && (
+          <p className="sendMail-error">{errors.textBody.message}</p>
         )}
+        <input
+          type="file"
+          multiple
+          {...register("attachments")}
+        />
+                <input
+        type="hidden"
+        value="true"
+        {...register("sendTheEmail")}
+        />
         <div className="sendMail-options">
           <Button
+            type="submit"
             variant="contained"
             color="primary"
             className="sendMail-send"
-            onClick={() => dispatch(closeSendMessage())}
           >
             Send
           </Button>
