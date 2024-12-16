@@ -12,12 +12,7 @@ public class Profile implements Serializable{
     private Profile() {}
 
 
-    public static synchronized Profile getInstance() {
-        if (instance == null) {
-            instance = new Profile();
-        }
-        return instance;
-    }
+
 
     public User getUser() {
         return user;

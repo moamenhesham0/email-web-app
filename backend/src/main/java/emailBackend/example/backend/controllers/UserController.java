@@ -15,49 +15,78 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import emailBackend.example.backend.classes.Attachment;
+import emailBackend.example.backend.classes.User;
+import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 
 
 
 
 @RestController
-@RequestMapping("/api/emails")
+@RequestMapping("api/user")
 public class UserController {
 
- @Autowired
+    @Autowired
     private UserService userService;
 
+    @Autowired
+    EmailAppRepository emailAppRepository;
+    
+
     @GetMapping("/getEmail/{folderName}/{id}")
-    public String readEmail(@PathVariable String folderName,@PathVariable String id) {
-        System.out.println(userService.getEmailById(folderName, id).toString());
-        return userService.getEmailById(folderName,id).toString();
+    public String readEmail(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName,@PathVariable String id) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        System.out.println(userService.getEmailById(loginUser, folderName, id).toString());
+        return userService.getEmailById(loginUser,folderName,id).toString();
     }
     
     @PostMapping("/createEmail")
-        public void createEmail(
+        public String createEmail(
             @RequestParam("senderEmail") String senderEmail,
             @RequestParam("recipientEmail") String recipientEmail,
             @RequestParam("subject") String subject,
             @RequestParam("textBody") String textBody,
             @RequestParam("sendTheEmail") boolean sendTheEmail,
-            @RequestParam("attachments") MultipartFile[] attachments
+            @RequestParam(value = "attachments", required = false) MultipartFile[] attachments
         ) {
+
+            User loginUser = emailAppRepository.getUserByEmail(senderEmail);
             List<Attachment> attachmentList = new ArrayList<>();
-            for (MultipartFile file : attachments) {
-                try {
-                    Attachment attachment = new Attachment();
-                    attachment.setAttachment(file.getBytes());
-                    attachment.setAttName(file.getOriginalFilename());
-                    attachment.setAttType(file.getContentType());
-                    attachment.setAttSize(file.getSize() / 1024.0f); // Size in KB
-                    attachmentList.add(attachment);
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to process attachment: " + file.getOriginalFilename(), e);
+            if (attachments != null && attachments.length > 0) {
+                for (MultipartFile file : attachments) {
+                    try {
+                        Attachment attachment = new Attachment();
+                        attachment.setAttachment(file.getBytes());
+                        attachment.setAttName(file.getOriginalFilename());
+                        attachment.setAttType(file.getContentType());
+                        attachment.setAttSize(file.getSize() / 1024.0f); // Size in KB
+                        attachmentList.add(attachment);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to process attachment: " + file.getOriginalFilename(), e);
+                    }
                 }
             }
 
-            userService.createEmail(senderEmail, recipientEmail, subject, textBody, attachmentList, sendTheEmail);
+            return userService.createEmail(loginUser,senderEmail, recipientEmail, subject, textBody, attachmentList, sendTheEmail); //return the id of the email save it
         }
+
+
+        @PostMapping("/sendEmailById")    ///for draft specially
+        public void sendEmailById(
+            @RequestParam("emailAddress") String emailAddress,
+            @RequestParam("folderName") String folderName,
+            @RequestParam("id") String id
+
+        ) {
+            User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+            userService.sendEmailById(loginUser, folderName, id);
+
+        }
+
+    
 
 
 
@@ -76,47 +105,65 @@ public class UserController {
         
 
     // }
-    @DeleteMapping("/deleteEmail/{folder}/{id}")
-    public void deleteEmail(@PathVariable String folder,@PathVariable String id){
-        userService.deleteEmailById(folder, id);
+    @DeleteMapping("/deleteEmail")
+    public void deleteEmail(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName,@RequestParam("ids") List<String> ids){
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.deleteEmailById(loginUser,folderName, ids);
     }
 
 
     @PostMapping("/addFolder/{folderName}")
-    public void addFolder(@PathVariable String folderName) {
-
-        userService.makeFolder(folderName);
+    public void addFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.makeFolder(loginUser,folderName);
         
     }
 
     @DeleteMapping("/deleteFolder/{folderName}")
-    public void deleteFolder(@PathVariable String folderName){
-        userService.deleteFolderByName(folderName);
+    public void deleteFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName){
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.deleteFolderByName(loginUser,folderName);
     }
+
+    @PostMapping("/renameFolder/{folderName}/{folderNewName}")
+    public void renameFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName, @PathVariable String folderNewName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.renameFolder(loginUser,folderName, folderNewName);
+    }
+    
 
     @PostMapping("/moveEmails/{listOfIds}/{folderNameFrom}/{folderNameTo}")
-    public void changeEmailsFolder(@PathVariable List<String> listOfIds, @PathVariable String folderNameFrom, @PathVariable String folderNameTo) {
-       
-        userService.moveEmails(listOfIds, folderNameFrom, folderNameTo);
+    public void changeEmailsFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable List<String> listOfIds, @PathVariable String folderNameFrom, @PathVariable String folderNameTo) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.moveEmails(loginUser,listOfIds, folderNameFrom, folderNameTo);
     
     }
 
-    @PostMapping("addContact/{userName}/{emailAddress}")
-    public void addContact(@PathVariable String userName, @PathVariable String emailAddress ) {
-       
-       userService.addContact(userName, emailAddress ); 
+    @PostMapping("addContact")
+    public void addContact(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("emailAddressesContact") List<String> emailAddressesContact ) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+       userService.addContact(loginUser,userName, emailAddressesContact ); 
     }
 
-    @GetMapping("getContact/{emailAddress}")
-    public String getMethodName(@PathVariable String emailAddress) {
-     
-        return userService.getContactByEmail(emailAddress).toString();
+    @GetMapping("getContact")
+    public List<String> getContactByUsername(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return userService.getContactByUsername(loginUser,userName);
     }
     
     
-    @DeleteMapping("deleteContact/{emailAddress}")
-    public void deleteContact(@PathVariable String emailAddress){
-        userService.removeContactFromList(emailAddress);
+    @DeleteMapping("deleteContactByUserName")
+    public void deleteContactByUserName(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName ){
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.deleteContactByUserName(loginUser,userName);
+    }
+    
+    @PostMapping("deleteContactEmailAddress")
+    public void deleteContactEmailAddress(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("contactEmailAddress") String contactEmailAddress) {
+        
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.deleteContactEmailAddress(loginUser,userName, contactEmailAddress);
+       
     }
     
     

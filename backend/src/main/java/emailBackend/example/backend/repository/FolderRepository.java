@@ -2,24 +2,19 @@ package emailBackend.example.backend.repository;
 
 
 import emailBackend.example.backend.classes.Folder;
-import emailBackend.example.backend.classes.Profile;
+import emailBackend.example.backend.classes.User;
 
 public class FolderRepository {
 
 
-    public Folder getFolderByName(String folderName){
-        Profile profile = Profile.getInstance();
-
-        if (profile.isSignin()) {
-            throw new IllegalStateException("Another user is already signed in.");
-        }
+    public Folder getFolderByName(User profile,String folderName){
         
         int indexOfFolder ;
-        int sizeOfFolder = profile.getUser().getFolders().size();
+        int sizeOfFolder = profile.getFolders().size();
 
         for ( indexOfFolder= 0; indexOfFolder < sizeOfFolder; indexOfFolder++) {
-            if (profile.getUser().getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
-                return profile.getUser().getFolders().get(indexOfFolder);
+            if (profile.getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
+                return profile.getFolders().get(indexOfFolder);
             }
             
         }

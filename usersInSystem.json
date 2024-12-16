@@ -1,0 +1,122 @@
+{
+  "ah@gmail.com": {
+    "username": "ah",
+    "password": "123456",
+    "emailAddress": "ah@gmail.com",
+    "folders": [
+      {
+        "folderName": "Inbox",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [
+          {
+            "sender": "muhannd@gmail.com",
+            "recipient": "ah@gmail.com",
+            "subject": "killl",
+            "textBody": "kill that guy",
+            "timeStamp": "2024-12-16T18:34:06.9119411+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "c27f6633-056c-4cda-9059-6cd182faeeea"
+          }
+        ],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Sent",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [
+          {
+            "sender": "ah@gmail.com",
+            "recipient": "muhannd@gmail.com",
+            "subject": "no",
+            "textBody": "no i will not kill him",
+            "timeStamp": "2024-12-16T18:34:44.152183+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "ed15c281-dc87-4748-8657-6576f9c18426"
+          }
+        ],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Draft",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Trash",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      }
+    ],
+    "contacts": []
+  },
+  "muhannd@gmail.com": {
+    "username": "muhannd",
+    "password": "123456",
+    "emailAddress": "muhannd@gmail.com",
+    "folders": [
+      {
+        "folderName": "Inbox",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [
+          {
+            "sender": "ah@gmail.com",
+            "recipient": "muhannd@gmail.com",
+            "subject": "no",
+            "textBody": "no i will not kill him",
+            "timeStamp": "2024-12-16T18:34:44.152183+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "ed15c281-dc87-4748-8657-6576f9c18426"
+          }
+        ],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Sent",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [
+          {
+            "sender": "muhannd@gmail.com",
+            "recipient": "ah@gmail.com",
+            "subject": "killl",
+            "textBody": "kill that guy",
+            "timeStamp": "2024-12-16T18:34:06.9119411+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "c27f6633-056c-4cda-9059-6cd182faeeea"
+          }
+        ],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Draft",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Trash",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      }
+    ],
+    "contacts": []
+  }
+}
