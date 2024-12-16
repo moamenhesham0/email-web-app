@@ -1,25 +1,28 @@
 package emailBackend.example.backend.classes;
 
+import java.util.List;
+
 public class Contact {
-    String userNmae;
-    String emailAdress;
+    String userName;
+    List<String> emailAdress;
     
-    public String getUserNmae() {
-        return userNmae;
-    }
-    public void setUserNmae(String userNmae) {
-        this.userNmae = userNmae;
-    }
-    public String getEmailAdress() {
+   
+    public List<String> getEmailAdress() {
         return emailAdress;
     }
-    public void setEmailAdress(String emailAdress) {
+    public void setEmailAdress(List<String> emailAdress) {
         this.emailAdress = emailAdress;
     }
-    
+
     @Override
     public String toString() {
-        return "Contact [userNmae=" + userNmae + ", emailAdress=" + emailAdress + "]";
+        return "Contact [userNmae=" + userName + ", emailAdress=" + emailAdress + "]";
+    }
+    public String getUserName() {
+        return userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     

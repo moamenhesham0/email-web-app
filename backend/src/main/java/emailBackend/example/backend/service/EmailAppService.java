@@ -3,7 +3,6 @@ package emailBackend.example.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import emailBackend.example.backend.classes.Profile;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.factory.UserFactory;
 import emailBackend.example.backend.repository.EmailAppRepository;
@@ -23,15 +22,6 @@ public class EmailAppService {
         
         User user = emailAppRepository.checkUserExist(email, password);
 
-        Profile profile = Profile.getInstance();
-
-        if (profile.isSignin()) {
-            throw new IllegalStateException("Another user is already signed in.");
-        }
-
-       
-        profile.setUser(user);
-        profile.setSignin(true);
 
         System.out.println("User " + user.getUsername() + " signed in successfully.");
 
@@ -44,14 +34,7 @@ public class EmailAppService {
     }
 
     public void signUserOut() {
-        
-        Profile profile = Profile.getInstance();
 
-        profile.signOut();
-        
-        if (profile.getUser() != null) {
-            throw new IllegalStateException("Error signing out");
-        }
     }
 
 }

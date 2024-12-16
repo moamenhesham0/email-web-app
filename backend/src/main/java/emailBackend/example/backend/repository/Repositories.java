@@ -3,23 +3,20 @@ package emailBackend.example.backend.repository;
 
 import org.springframework.stereotype.Repository;
 
-
-import emailBackend.example.backend.classes.Profile;
+import emailBackend.example.backend.classes.User;
 
 @Repository
 public class Repositories {
     
 
-    public int getFolderByName(String folderName){
-        Profile profile = Profile.getInstance();
+    public int getFolderByName(User profile,String folderName){
 
-      
         
         int indexOfFolder ;
-        int sizeOfFolder = profile.getUser().getFolders().size();
+        int sizeOfFolder = profile.getFolders().size();
 
         for ( indexOfFolder= 0; indexOfFolder < sizeOfFolder; indexOfFolder++) {
-            if (profile.getUser().getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
+            if (profile.getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
                 return indexOfFolder;
             }
             
@@ -31,15 +28,15 @@ public class Repositories {
     }
 
 
-    public int getEmailById(String folderName, String id){
+    public int getEmailById(User profile,String folderName, String id){
         
-        Profile profile = Profile.getInstance();
+
         
         int indexOfFolder ;
-        int sizeOfFolder = profile.getUser().getFolders().size();
+        int sizeOfFolder = profile.getFolders().size();
         int indexOfEmail;
         for ( indexOfFolder= 0; indexOfFolder < sizeOfFolder; indexOfFolder++) {
-            if (profile.getUser().getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
+            if (profile.getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
                 break;
             }
             
@@ -49,7 +46,7 @@ public class Repositories {
         }
 
         for ( indexOfEmail= 0; indexOfEmail < sizeOfFolder; indexOfEmail++) {
-            if (profile.getUser().getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).getId().equals(id)) {
+            if (profile.getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).getId().equals(id)) {
                 return indexOfEmail;
             }
             

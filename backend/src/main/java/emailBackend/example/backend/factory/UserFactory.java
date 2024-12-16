@@ -16,7 +16,7 @@ public class UserFactory {
         defaultFolders.add(FolderFactory.creatFolder("Draft"));
         defaultFolders.add(FolderFactory.creatFolder("Trash"));
 
-
+        
 
         return new User(username, password, emailAddress, defaultFolders, new ArrayList<>());
     }
