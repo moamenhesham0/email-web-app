@@ -44,9 +44,9 @@ public class UserController {
     }
     
     @PostMapping("/createEmail")
-        public String createEmail(
+        public List<String> createEmail(
             @RequestParam("senderEmail") String senderEmail,
-            @RequestParam("recipientEmail") String recipientEmail,
+            @RequestParam("recipientEmail") List<String> recipientEmail,
             @RequestParam("subject") String subject,
             @RequestParam("textBody") String textBody,
             @RequestParam("sendTheEmail") boolean sendTheEmail,
@@ -70,8 +70,10 @@ public class UserController {
                 }
             }
 
-            return userService.createEmail(loginUser,senderEmail, recipientEmail, subject, textBody, attachmentList, sendTheEmail); //return the id of the email save it
+            return userService.sendToMulUser(loginUser,senderEmail, recipientEmail, subject, textBody, attachmentList, sendTheEmail); //return the id of the email save it
         }
+
+        
 
 
         @PostMapping("/sendEmailById")    ///for draft specially
@@ -105,6 +107,8 @@ public class UserController {
         
 
     // }
+
+
     @DeleteMapping("/deleteEmail")
     public void deleteEmail(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName,@RequestParam("ids") List<String> ids){
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
