@@ -91,10 +91,25 @@ public class UserService {
 
     }
 
-    public void sendEmailById(User profile,String folderName,String id){
-        Email email = getEmailById(profile, folderName, id);
+    public List<Email> getMulEmails(User profile,String folderName,List<String> ids){
 
-        createEmail(profile,email.getSender(),email.getRecipient(), email.getTextBody(), email.getTextBody(), email.getAttachments(), true);
+        List<Email> emails = new ArrayList<>();
+
+        for (String id : ids) {
+            Email getEmail = getEmailById(profile, folderName, id);
+            emails.add(getEmail);
+        }
+
+        return emails;
+    }
+
+    public void sendEmailById(User profile,String folderName,List<String> ids){
+        for (String id : ids) {
+            Email email = getEmailById(profile, folderName, id);
+
+            createEmail(profile,email.getSender(),email.getRecipient(), email.getTextBody(), email.getTextBody(), email.getAttachments(), true);
+        }       
+       
     }
 
     public void deleteEmailById(User profile,String folderName,List<String> ids) {
