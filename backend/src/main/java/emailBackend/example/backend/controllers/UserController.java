@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import emailBackend.example.backend.classes.Attachment;
+import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -36,11 +35,11 @@ public class UserController {
     EmailAppRepository emailAppRepository;
     
 
-    @GetMapping("/getEmail/{folderName}/{id}")
-    public String readEmail(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName,@PathVariable String id) {
+    @GetMapping("/getEmail")
+    public List<Email> readEmail(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName,@RequestParam("ids") List<String> ids) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-        System.out.println(userService.getEmailById(loginUser, folderName, id).toString());
-        return userService.getEmailById(loginUser,folderName,id).toString();
+        System.out.println(userService.getMulEmails(loginUser, folderName, ids).toString());
+        return userService.getMulEmails(loginUser,folderName,ids);
     }
     
     @PostMapping("/createEmail")
@@ -80,11 +79,11 @@ public class UserController {
         public void sendEmailById(
             @RequestParam("emailAddress") String emailAddress,
             @RequestParam("folderName") String folderName,
-            @RequestParam("id") String id
+            @RequestParam("id") List<String> ids
 
         ) {
             User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-            userService.sendEmailById(loginUser, folderName, id);
+            userService.sendEmailById(loginUser, folderName, ids);
 
         }
 
@@ -116,28 +115,28 @@ public class UserController {
     }
 
 
-    @PostMapping("/addFolder/{folderName}")
-    public void addFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName) {
+    @PostMapping("/addFolder")
+    public void addFolder(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         userService.makeFolder(loginUser,folderName);
         
     }
 
-    @DeleteMapping("/deleteFolder/{folderName}")
-    public void deleteFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName){
+    @DeleteMapping("/deleteFolder")
+    public void deleteFolder(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName){
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         userService.deleteFolderByName(loginUser,folderName);
     }
 
-    @PostMapping("/renameFolder/{folderName}/{folderNewName}")
-    public void renameFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable String folderName, @PathVariable String folderNewName) {
+    @PostMapping("/renameFolder")
+    public void renameFolder(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName, @RequestParam("folderNewName") String folderNewName) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         userService.renameFolder(loginUser,folderName, folderNewName);
     }
     
 
-    @PostMapping("/moveEmails/{listOfIds}/{folderNameFrom}/{folderNameTo}")
-    public void changeEmailsFolder(@RequestParam("emailAddress") String emailAddress,@PathVariable List<String> listOfIds, @PathVariable String folderNameFrom, @PathVariable String folderNameTo) {
+    @PostMapping("/moveEmails")
+    public void changeEmailsFolder(@RequestParam("emailAddress") String emailAddress,@RequestParam("listOfIds") List<String> listOfIds, @RequestParam("folderNameFrom") String folderNameFrom, @RequestParam("folderNameTo") String folderNameTo) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         userService.moveEmails(loginUser,listOfIds, folderNameFrom, folderNameTo);
     
