@@ -1,6 +1,7 @@
 package emailBackend.example.backend.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,7 +33,7 @@ public class UserService {
      
 
     
-    public String createEmail(User profile,String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail) {
+    public Email createEmail(User profile,String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail) {
         
        
         
@@ -44,16 +45,34 @@ public class UserService {
         }else{
 
             User user = emailAppRepository.getUserByEmail(recipientEmail);
-            user.getFolders().get(0).getEmails().add(email);
-            emailAppRepository.saveUserInSystem(user);
+            if (user != null) {
+                user.getFolders().get(0).getEmails().add(email);
+                emailAppRepository.saveUserInSystem(user);
+                profile.getFolders().get(1).getEmails().add(email);
+                System.out.println(profile.getFolders().get(1).toString());
+            }
+           
         }
 
-        profile.getFolders().get(1).getEmails().add(email);
-            System.out.println(profile.getFolders().get(1).toString());
+       
 
         emailAppRepository.saveUserInSystem(profile);
 
-        return email.getId();
+        return email;
+    }
+
+
+    public List<String> sendToMulUser(User profile,String senderEmail,List<String> recipientsEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail){
+        
+        List<String> ids = new ArrayList<>();
+        for (String recipientEmail : recipientsEmail) {
+            
+        Email email = createEmail(profile, senderEmail, recipientEmail, subject, textBody, attachments, sendTheEmail);
+
+        ids.add(email.getId());
+        }
+
+        return ids;
     }
 
     public Email getEmailById(User profile,String folderName,String id) {
@@ -128,7 +147,7 @@ public class UserService {
 
     public void makeFolder(User profile,String folderName) {
 
-      
+        validateFolderName(folderName);
         for (Folder  folder : profile.getFolders()) {
             if (folderName.equals(folder.getFolderName())) {
                 throw new IllegalStateException("Folder Name already Exist: " + folderName);
@@ -183,11 +202,18 @@ public class UserService {
 
 
     public void renameFolder(User profile, String folderName, String folderNewName) {
-        
+
+        validateFolderName(folderNewName);
+        for (Folder  folder : profile.getFolders()) {
+            if (folderNewName.equals(folder.getFolderName())) {
+                throw new IllegalStateException("Folder Name already Exist: " + folderName);
+            }
+        }
+                
         int indexOfFolder = repositories.getFolderByName(profile,folderName);
         profile.getFolders().get(indexOfFolder).setFolderName(folderNewName);
         emailAppRepository.saveUserInSystem(profile);
-    }
+}
 
     public List<String> getContactByUsername(User profile, String userName) {
         
@@ -231,6 +257,31 @@ public class UserService {
         
     }
 
+
+    private void validateFolderName(String folderName) {
+        if (folderName == null || folderName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Folder name cannot be null or empty.");
+        }
+    
+        // Check for invalid characters or reserved names
+        String[] reservedFolders = {"Inbox", "Sent", "Draft", "Trash", "Contact"};
+        for (String reserved : reservedFolders) {
+            if (reserved.equalsIgnoreCase(folderName)) {
+                throw new IllegalStateException("Cannot use a reserved folder name: " + folderName);
+            }
+        }
+    
+        // Check for invalid characters (e.g., disallow special characters)
+        if (!folderName.matches("^[a-zA-Z0-9_ ]+$")) {
+            throw new IllegalArgumentException("Folder name contains invalid characters.");
+        }
+    
+        // Enforce a maximum length
+        if (folderName.length() > 50) {
+            throw new IllegalArgumentException("Folder name cannot exceed 50 characters.");
+        }
+    }
+    
 
     
 }
