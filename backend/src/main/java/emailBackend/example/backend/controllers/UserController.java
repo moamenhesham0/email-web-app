@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import emailBackend.example.backend.classes.Attachment;
 import emailBackend.example.backend.classes.Email;
+import emailBackend.example.backend.classes.Folder;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.UserService;
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/getEmailByFolder")
-    public List<Email> getMethodName(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName) {
+    public List<Email> getEmailByFolder(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         System.out.println(userService.getAllEmails(loginUser, folderName ).toString());
         return userService.getAllEmails(loginUser,folderName);
@@ -108,6 +109,18 @@ public class UserController {
         userService.makeFolder(loginUser,folderName);
         
     }
+
+    @GetMapping("/loadFolders")
+    public List<String> loadFolders(@RequestParam("emailAddress") String emailAddress) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        List<String> foldersName = new ArrayList<>();
+        for (Folder folder : loginUser.getFolders()) {
+            foldersName.add(folder.getFolderName());
+        }
+
+        return foldersName;
+    }
+    
 
     @DeleteMapping("/deleteFolder")
     public void deleteFolder(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName){

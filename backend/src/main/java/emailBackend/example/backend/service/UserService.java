@@ -75,6 +75,12 @@ public class UserService {
         return ids;
     }
 
+    public List<Email> getAllEmails(User profile, String folderName){
+        int indexOfFolder = repositories.getFolderByName(profile,folderName);
+        
+        return profile.getFolders().get(indexOfFolder).getEmails();
+    }
+
     public Email getEmailById(User profile,String folderName,String id) {
 
         
