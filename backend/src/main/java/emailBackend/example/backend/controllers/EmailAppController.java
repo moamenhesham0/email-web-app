@@ -1,38 +1,39 @@
 package emailBackend.example.backend.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.service.EmailAppService;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
 @RequestMapping("api/service")
 public class EmailAppController {
     
-    EmailAppService emailAppService = new EmailAppService();
+    @Autowired
+    EmailAppService emailAppService;
 
-    @PostMapping("/signin/{email}/{password}")
-    public User login(@PathVariable String email, @PathVariable String password) {
-        
-        return emailAppService.checkLogin(email, password);
-       
-
+    @PostMapping("/signin")
+    public void signin(@RequestParam("email") String email, @RequestParam("password") String password) {
+    
+        emailAppService.checkLogin(email, password);
     }
 
-    @PostMapping("/signup/{userName}/{email}/{password}")
-    public void signup(@PathVariable String userName, @PathVariable String email, @PathVariable String password) {
-        User user = new User();
-        user.setUsername(userName);
-        user.setEmailAddress(email);
-        user.setPassword(password);
-        user.setFolders(null);  ///will change later
-        
-        emailAppService.saveUser(user);
+    @PostMapping("/signup")
+    public void signup(@RequestParam("userName") String userName, @RequestParam("email") String email, @RequestParam("password") String password) {
+    
+
+        emailAppService.saveUser(userName, email, password);
     }
+
+    @PostMapping("/logout")
+    public void signout() {
+        emailAppService.signUserOut();
+    }
+    
     
 }

@@ -3,12 +3,23 @@ package emailBackend.example.backend.classes;
 import java.io.Serializable;
 import java.util.List;
 
+
 public class User implements Serializable {
     String username;
     String password; 
     String emailAddress; 
     List<Folder> folders;
+    List<Contact> contacts;
+    public User() {}
     
+    public User(String username, String password, String emailAddress, List<Folder> folders, List<Contact> contacts) {
+        this.username = username;
+        this.password = password;
+        this.emailAddress = emailAddress;
+        this.folders = folders;
+        this.contacts = contacts;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -34,11 +45,19 @@ public class User implements Serializable {
         this.folders = folders;
     }
     
-    
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
     @Override
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", emailAddress=" + emailAddress + ", folders="
-                + folders + "]";
+                + folders + ", contacts=" + contacts + "]";
     } 
 
         

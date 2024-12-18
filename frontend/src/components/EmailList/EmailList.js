@@ -9,9 +9,59 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import KeyboardHideIcon from "@mui/icons-material/KeyboardHide";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EmailRow from "../EmailRow/EmailRow";
+import { useSelector } from "react-redux";
+import { login, selectUser } from "../../features/userSlice";
+import { useDispatch } from "react-redux";
+import { openSendMessage, selectedType } from "../../features/mailSlice";
+
+
 
 
 function EmailList() {
+  const user = useSelector(selectUser);
+  const [emails, setEmails] = useState(user.emails || []);
+  const type = useSelector(selectedType);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(user.emails);
+    if(!user.emails){
+      fetchEmails();
+    }
+  }, [user, type]);
+
+    const fetchEmails = async () => {
+      console.log(user.email);
+      console.log(type);
+      const queryParams = new URLSearchParams({
+        emailAddress: user.email,
+        folderName: type,
+      });
+  
+      try {
+        const response = await fetch(`http://localhost:8080/api/user/getEmailByFolder?${queryParams}`, {
+          method: "GET", // GET request with query parameters
+        });
+  
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(errorDetails.message);
+        }
+        const responseData = await response.json(); // Parse the JSON response
+        console.log(responseData);
+        setEmails(responseData); // Directly set the list of emails
+        dispatch(
+                    login({
+                      ...user,
+                      emails: responseData,
+                    })
+              );
+      } catch (error) {
+        console.error("Error fetching emails:", error);
+        alert("Failed to fetch emails. Please try again.");
+      }
+    };
+
   return (
     <div className="emailList">
       <div className="emailList-settings">
@@ -20,7 +70,7 @@ function EmailList() {
           <IconButton>
             <ArrowDropDownIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={()=> fetchEmails()}>
             <RedoIcon />
           </IconButton>
           <IconButton>
@@ -44,36 +94,19 @@ function EmailList() {
       </div>
 
       <div className="emailList-list">
-        {/* {emails.map(({ id, data: { to, subject, message, timestamp } }) => (
+        {emails.map(({ attachments,id,read,priority:priorityString,recipient,sender,subject, textBody, timeStamp }) => (
           <EmailRow
-            id={id}
-            key={id}
-            title={to}
-            subject={subject}
-            description={message}
-            time={new Date(timestamp?.seconds * 1000).toUTCString()}
+          attachments={attachments}
+          id={id}
+          priority={priorityString}
+          read={read}
+          recipient={recipient}
+          sender={sender}
+          subject={subject}
+          textBody={textBody}
+          timeStamp={timeStamp}
           />
-        ))} */}
-        <EmailRow
-          title="Twitch"
-          subject="Hey fellow streamer!!"
-          description="This is a DOPE"
-          time="10pm"
-        />
-        <EmailRow
-          title="Epic Games"
-          subject="Update to our Player Agreements"
-          description="Re: Update to our Player Agreement In June, we shared that we’re making some updates to our End User License Agreement (EULA) for Fortnite. This took longer than expected and the updated agreement will go into effect on December 13, 2024, when we’ll ask you to review and accept the terms the next time you log into Fortnite.
-We’ve posted these changes online so you can take a look at them before they go into effect. To review them, click “Read New Terms” at the top of the Fortnite End User License Agreement webpage."
-          time="5pm"
-        />
-        <EmailRow
-          title="Course Hero "
-          subject="Welcome to Course Hero"
-          description="Welcome to studying, superpowered
-You made the first step toward smarter studying—way to go. See all the ways you can superpower your studying with Course Hero."
-          time="7am"
-        />
+        ))}
       </div>
     </div>
   );
