@@ -1,6 +1,7 @@
 package emailBackend.example.backend.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,5 +88,20 @@ public class ContactService {
         List<String> emailAddresses = getContactByUsername(profile, userName);
         emailAddresses.add(userName);
         emailAppRepository.saveUserInSystem(profile);
+    }
+    public List<Contact> searchContacts(User profile, String searchQuery) {
+        return profile.getContacts().stream()
+                .filter(contact -> 
+                        contact.getUserName().toLowerCase().contains(searchQuery.toLowerCase()) || 
+                        contact.getEmailAdress().stream()
+                            .anyMatch(email -> email.toLowerCase().contains(searchQuery.toLowerCase())))
+                .collect(Collectors.toList());
+    }
+
+    // Sort contacts by userName in ascending order
+    public List<Contact> sortContactsByName(List<Contact> contacts) {
+        return contacts.stream()
+                .sorted((c1, c2) -> c1.getUserName().compareToIgnoreCase(c2.getUserName()))
+                .collect(Collectors.toList());
     }
 }

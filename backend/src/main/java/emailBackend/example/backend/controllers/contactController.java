@@ -14,7 +14,7 @@ import emailBackend.example.backend.classes.Contact;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.ContactService;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -69,5 +69,20 @@ public class contactController {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         contactService.deleteContactEmailAddress(loginUser,userName, contactEmailAddress);
        
+    }
+    @GetMapping("/searchContacts")
+    public List<Contact> searchContacts(
+            @RequestParam("emailAddress") String emailAddress,
+            @RequestParam("query") String query) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return contactService.searchContacts(loginUser, query);
+    }
+
+    // Sort contacts by userName
+    @GetMapping("/sortContacts")
+    public List<Contact> sortContacts(
+            @RequestParam("emailAddress") String emailAddress) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return contactService.sortContactsByName(loginUser.getContacts());
     }
 }
