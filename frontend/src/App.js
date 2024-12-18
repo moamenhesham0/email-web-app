@@ -22,6 +22,16 @@ function App() {
         <Routes>
               <Route path="/" element={<Login/>} />
               <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="*"
+                element={
+                  ["/signup", "/"].includes(window.location.pathname) ? (
+                    <Login />
+                  ) : (
+                    <Login />
+                  )
+                }
+              />
             </Routes>
         ) : (
         <div className="app">
@@ -32,6 +42,16 @@ function App() {
             <Routes>
               <Route path="/emaillist" element={<EmailList />} />
               <Route path="/mail" element={<Mail />} />
+              <Route
+                path="*"
+                element={
+                  ["/emaillist", "/mail"].includes(window.location.pathname) ? (
+                    <EmailList />
+                  ) : (
+                    <EmailList />
+                  )
+                }
+              />
             </Routes>
           </div>
 

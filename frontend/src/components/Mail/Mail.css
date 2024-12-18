@@ -117,15 +117,23 @@
   
   .mail-attachmentLink {
     margin-bottom: 10px;
+    display: inline-block; /* Ensures the box fits around the content */
   }
-  
   .mail-attachmentLink a {
     text-decoration: none;
     color: #3079ed;
     font-weight: bold;
+    display: inline-block; /* Makes the link behave like a block for padding and border */
+    padding: 10px 15px; /* Adds space inside the box */
+    border: 2px solid #3079ed; /* Adds a border around the link */
+    border-radius: 8px; /* Rounds the corners */
+    background-color: #f4f8fd; /* Light background color for a box effect */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover effects */
+  }
+  .mail-attachmentLink a:hover {
+    text-decoration: none; /* Keep it consistent */
+    background-color: #e2ecf9; /* Slightly darker background on hover */
+    color: #2056b5; /* Darker color for text on hover */
   }
   
-  .mail-attachmentLink a:hover {
-    text-decoration: underline;
-  }
   

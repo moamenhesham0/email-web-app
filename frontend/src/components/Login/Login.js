@@ -21,7 +21,6 @@ function Login() {
             method: "POST",
             body: formData,
           });
-    
           if (!response.ok) {
             const errorDetails = await response.json();
             throw new Error(errorDetails.message);

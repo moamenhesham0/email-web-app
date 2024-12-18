@@ -53,6 +53,16 @@ function Sidebar() {
     fetchFolders();
   }, [isfolder, user]);
 
+const handleContacts = () => {
+  setselected(false);
+  setSelectedOption("Contacts");
+  dispatch(
+    login({
+      ...user,
+      contacts: true,
+    })
+);
+}
 
   const handleOptionClick = (title) => {
     setselected(false);
@@ -144,6 +154,13 @@ function Sidebar() {
       number={5} 
       onClick={() => handleOptionClick("Drafts")}
       selected={selectedOption === "Drafts"}
+      />
+            <SidebarOption
+      Icon={NoteIcon}
+      title="Contacts"
+      number={5} 
+      onClick={() => handleContacts()}
+      selected={selectedOption === "Contacts"}
       />
             {folders.map((folder, index) => (
         <SidebarOption
