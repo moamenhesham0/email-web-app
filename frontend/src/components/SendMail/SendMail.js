@@ -34,7 +34,7 @@ function SendMail() {
     formData.append("subject", data.subject);
     formData.append("textBody", data.textBody);
     formData.append("sendTheEmail", data.sendTheEmail);
-    formData.append("priority", selectedOption); // Include the priority
+    formData.append("priority", selectedOption);
     if (data.attachments) {
       Array.from(data.attachments).forEach((file) =>
         formData.append("attachments", file)

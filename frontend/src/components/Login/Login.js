@@ -12,25 +12,31 @@ function Login() {
   const navigate = useNavigate();
 
 
-  const signIn = () => {
-    // Simulate backend validation
-    if (email === "test@example.com" && password === "password123") {
-      const mockUser = {
-        displayName: "Test",
-        email: email,
-        photoUrl: "https://via.placeholder.com/150",
-      };
-
-      dispatch(
-        login({
-          displayName: mockUser.displayName,
-          email: mockUser.email,
-          photoUrl: mockUser.photoUrl,
-        })
+  const signIn = async() => {
+    const formData = new FormData();
+    formData.append("email", email)
+    formData.append("password", password)
+    try {
+          const response = await fetch("http://localhost:8080/api/service/signin", {
+            method: "POST",
+            body: formData,
+          });
+    
+          if (!response.ok) {
+            const errorDetails = await response.json();
+            throw new Error(errorDetails.message);
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Invalid email or password. Please try again.");
+          }
+          dispatch(
+            login({
+              user: true,
+              email: email,
+              photoUrl: "null",
+            })
       );
-    } else {
-      alert("Invalid email or password. Please try again.");
-    }
   };
 
   return (
