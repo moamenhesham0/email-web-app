@@ -29,6 +29,9 @@ public class EmailAppService {
 
     public void saveUser(String userName, String email, String password) {
 
+        if (emailAppRepository.signupCheck(email)) {
+            throw new IllegalStateException("Email is taken");
+        }
         User user = UserFactory.createUser(userName, password, email);
        emailAppRepository.saveUserInSystem(user);
     }

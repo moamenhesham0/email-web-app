@@ -41,6 +41,14 @@ public class UserController {
         System.out.println(userService.getMulEmails(loginUser, folderName, ids).toString());
         return userService.getMulEmails(loginUser,folderName,ids);
     }
+
+    @GetMapping("/getEmailByFolder")
+    public List<Email> getMethodName(@RequestParam("emailAddress") String emailAddress,@RequestParam("folderName") String folderName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        System.out.println(userService.getAllEmails(loginUser, folderName ).toString());
+        return userService.getAllEmails(loginUser,folderName);
+    }
+    
     
     @PostMapping("/createEmail")
         public List<String> createEmail(
@@ -86,27 +94,6 @@ public class UserController {
             userService.sendEmailById(loginUser, folderName, ids);
 
         }
-
-    
-
-
-
-    // @PostMapping("/creat/{senderEmail}/{recipientEmail}/{subject}/{textBody}")  /// sendTheEemail is boolean in the back if you eixt with out sending,  send the request with false
-    // public void createEmail(@PathVariable String senderEmail,@PathVariable String recipientEmail, @PathVariable String subject, @PathVariable String textBody ){
-    //      boolean sendTheEmail = true;
-    //     List<Attachment> attachments = null;
-    //     userService.createEmail( senderEmail, recipientEmail,  subject,  textBody, attachments, sendTheEmail);
-    // }
-
-
-
-    // @PostMapping("/send/{folderName}/{id}/{recipientEmailAddress}")
-    // public void sendEmail(@PathVariable String folderName,@PathVariable String id, @PathVariable String recipientEmailAddress){
-    //     Optional<Email> email = Optional.ofNullable(new Email());
-        
-
-    // }
-
 
     @DeleteMapping("/deleteEmail")
     public void deleteEmail(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName,@RequestParam("ids") List<String> ids){

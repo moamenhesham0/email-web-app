@@ -49,6 +49,13 @@ public class EmailAppRepository {
         }
     }
 
+    public boolean signupCheck(String emailAddress){
+        if (usersInSystem.containsKey(emailAddress)) {
+            return true;
+        }
+        return false;
+    }
+
     public void saveUserInSystem(User user) {
         if (usersInSystem.containsKey(user.getEmailAddress())) {
             System.out.println("User exists. Updating user details...");
