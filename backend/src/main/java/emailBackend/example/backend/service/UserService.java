@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import emailBackend.example.backend.classes.Attachment;
-import emailBackend.example.backend.classes.Contact;
 import emailBackend.example.backend.classes.Email;
-import emailBackend.example.backend.classes.Folder;
+import emailBackend.example.backend.classes.Priority;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.factory.EmailFactory;
-import emailBackend.example.backend.factory.FolderFactory;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.repository.Repositories;
 
@@ -33,22 +31,27 @@ public class UserService {
      
 
     
-    public Email createEmail(User profile,String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail) {
+    public Email createEmail(User profile,String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail, String priority) {
         
        
         
-        
+        Priority priorityGet  = new Priority(priority);
         Email email = emailFactory.createEmail(senderEmail, recipientEmail,subject ,textBody, attachments);
         if (!sendTheEmail) {
+            System.out.println("i set prio");
+            email.setPriority(priorityGet);
             profile.getFolders().get(2).getEmails().add(email);
             System.out.println(profile.getFolders().get(2).toString());
         }else{
 
             User user = emailAppRepository.getUserByEmail(recipientEmail);
             if (user != null) {
+                System.out.println("i no set");
                 user.getFolders().get(0).getEmails().add(email);
                 emailAppRepository.saveUserInSystem(user);
+                
                 profile.getFolders().get(1).getEmails().add(email);
+                profile.getFolders().get(1).getEmails().getLast().setPriority(priorityGet);
                 System.out.println(profile.getFolders().get(1).toString());
             }
            
@@ -62,12 +65,13 @@ public class UserService {
     }
 
 
-    public List<String> sendToMulUser(User profile,String senderEmail,List<String> recipientsEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail){
+    public List<String> sendToMulUser(User profile,String senderEmail,List<String> recipientsEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail, String priority){
         
         List<String> ids = new ArrayList<>();
+     
         for (String recipientEmail : recipientsEmail) {
-            
-        Email email = createEmail(profile, senderEmail, recipientEmail, subject, textBody, attachments, sendTheEmail);
+        
+        Email email = createEmail(profile, senderEmail, recipientEmail, subject, textBody, attachments, sendTheEmail, priority);
 
         ids.add(email.getId());
         }
@@ -113,9 +117,9 @@ public class UserService {
         for (String id : ids) {
             Email email = getEmailById(profile, folderName, id);
 
-            createEmail(profile,email.getSender(),email.getRecipient(), email.getTextBody(), email.getTextBody(), email.getAttachments(), true);
+            createEmail(profile,email.getSender(),email.getRecipient(), email.getTextBody(), email.getTextBody(), email.getAttachments(), true, null);
         }       
-       
+        emailAppRepository.saveUserInSystem(profile);
     }
 
     public void deleteEmailById(User profile,String folderName,List<String> ids) {
@@ -138,49 +142,8 @@ public class UserService {
         emailAppRepository.saveUserInSystem(profile);
     }
 
-    public void deleteFolderByName(User profile,String folderName) {
 
-        switch (folderName) {
-            case "Inbox":
-            case "Sent":
-            case "Draft":
-            case "Trash":
-            case "Contact":
-                throw new IllegalStateException("Cannot remove the default folder: " + folderName);
-            default:
-                
-            int indexOfFolder = repositories.getFolderByName(profile,folderName);
-            try {
-                for (Email email : profile.getFolders().get(indexOfFolder).getEmails()) {
-                    profile.getFolders().get(3).getEmails().add(email);
-                }
-            } catch (Exception e) {
-                System.out.println("no mails");
-            }
-            
-            
-            profile.getFolders().remove(indexOfFolder);
 
-            emailAppRepository.saveUserInSystem(profile);
-        }
-
-    }
-
-    public void makeFolder(User profile,String folderName) {
-
-        validateFolderName(folderName);
-        for (Folder  folder : profile.getFolders()) {
-            if (folderName.equals(folder.getFolderName())) {
-                throw new IllegalStateException("Folder Name already Exist: " + folderName);
-            }
-        }
-
-        Folder newFolder = FolderFactory.creatFolder(folderName);
-
-        profile.getFolders().add(newFolder);
-
-        emailAppRepository.saveUserInSystem(profile);
-    }
 
     public void moveEmails(User profile,List<String> listOfIds, String folderNameFrom, String folderNameTo) {
 
@@ -201,108 +164,30 @@ public class UserService {
         emailAppRepository.saveUserInSystem(profile);
     }
 
-    public void addContact(User profile,String userName, List<String> emailAddresses) {
-        
 
-        for (Contact con : profile.getContacts()) {
-            if (con.getUserName().equals(userName)) {
-                System.out.println("user Name is in your contact");
-                throw new IllegalStateException("User name: "+userName+" is in your contacts list ");
-            }
-
-        }
-
-        Contact contact = new Contact();
-        contact.setEmailAdress(emailAddresses);
-        contact.setUserName(userName);
-
-        profile.getContacts().add(contact);
-        emailAppRepository.saveUserInSystem(profile);
-    }
-
-
-
-    public void renameFolder(User profile, String folderName, String folderNewName) {
-
-        validateFolderName(folderNewName);
-        for (Folder  folder : profile.getFolders()) {
-            if (folderNewName.equals(folder.getFolderName())) {
-                throw new IllegalStateException("Folder Name already Exist: " + folderName);
-            }
-        }
-                
+    public List<Attachment> getAttachments(User profile, String folderName, String id) {
         int indexOfFolder = repositories.getFolderByName(profile,folderName);
-        profile.getFolders().get(indexOfFolder).setFolderName(folderNewName);
+        int indexOfEmail = repositories.getEmailById(profile,folderName, id);
+
+        return profile.getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).getAttachments();
+    }
+
+
+    public void setPriority(User profile, String folderName, String id, String priority) {
+        int indexOfFolder = repositories.getFolderByName(profile,folderName);
+        int indexOfEmail = repositories.getEmailById(profile,folderName, id);
+        
+        Priority priorityGet  = new Priority(priority);
+        profile.getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).setPriority(priorityGet);
+
         emailAppRepository.saveUserInSystem(profile);
-}
-
-    public List<String> getContactByUsername(User profile, String userName) {
-        
-        for (Contact con : profile.getContacts()) {
-            if (con.getUserName().equals(userName)) {
-                return con.getEmailAdress();
-            }
-        }
-        throw new IllegalStateException("user Name does not exist");
-    }
-
-    public void deleteContactByUserName(User profile, String userName) {
-       
-        for (Contact con : profile.getContacts()) {
-            if (con.getUserName().equals(userName)) {
-                profile.getContacts().remove(con);  ///////////////////////////////////////////// want to be tested
-                emailAppRepository.saveUserInSystem(profile);
-                return;
-            }
-        }
-        throw new IllegalStateException("user Name does not exist");
-    }
-
-    public void deleteContactEmailAddress(User profile, String userName, String contactEmailAddress) {
-        
-        for (Contact con : profile.getContacts()) {
-            if (con.getUserName().equals(userName)) {
-                    for (String em : con.getEmailAdress()) {
-                        if (em.equals(contactEmailAddress)) {
-                            con.getEmailAdress().remove(contactEmailAddress);   ///////////////////////////////////////////// want to be tested
-                            emailAppRepository.saveUserInSystem(profile);
-                            return;
-                        }
-                    }  
-
-                    throw new IllegalStateException("Email Address does not exist for this contact userName");
-            }
-        }
-
-        throw new IllegalStateException("User name does not exist for this contact");
-        
     }
 
 
-    private void validateFolderName(String folderName) {
-        if (folderName == null || folderName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Folder name cannot be null or empty.");
-        }
-    
-        // Check for invalid characters or reserved names
-        String[] reservedFolders = {"Inbox", "Sent", "Draft", "Trash", "Contact"};
-        for (String reserved : reservedFolders) {
-            if (reserved.equalsIgnoreCase(folderName)) {
-                throw new IllegalStateException("Cannot use a reserved folder name: " + folderName);
-            }
-        }
-    
-        // Check for invalid characters (e.g., disallow special characters)
-        if (!folderName.matches("^[a-zA-Z0-9_ ]+$")) {
-            throw new IllegalArgumentException("Folder name contains invalid characters.");
-        }
-    
-        // Enforce a maximum length
-        if (folderName.length() > 50) {
-            throw new IllegalArgumentException("Folder name cannot exceed 50 characters.");
-        }
-    }
-    
+
+
+
+
 
     
 }

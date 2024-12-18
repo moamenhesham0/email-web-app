@@ -84,9 +84,15 @@ public class Email implements Serializable {
         return this.priority;
     }
 
+    
+
     @Override
     public String toString() {
         return "Email [recipient=" + recipient + ", subject=" + subject + ", textBody=" + textBody + ", timeStamp="
                 + timeStamp + ", read=" + read + ", attachments=" + attachments + ", id=" + id + "]";
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }

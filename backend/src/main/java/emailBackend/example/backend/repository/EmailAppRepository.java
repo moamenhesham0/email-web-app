@@ -27,7 +27,7 @@ public class EmailAppRepository {
     public User getUserByEmail(String emailAddress){
         if (usersInSystem.containsKey(emailAddress)) {
             User user = usersInSystem.get(emailAddress);
-                System.out.println(user);
+        
                 return user;
     
         } else {

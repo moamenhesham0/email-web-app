@@ -2,8 +2,10 @@ package emailBackend.example.backend.controllers;
 
 import emailBackend.example.backend.classes.Sort.SortStrategy;
 import emailBackend.example.backend.classes.Sort.SortStrategyFactory;
+import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.SortService;
 import emailBackend.example.backend.classes.Email;
+import emailBackend.example.backend.classes.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +22,24 @@ public class SortController {
     @Autowired
     private SortStrategyFactory sortStrategyFactory;
 
+    @Autowired
+    EmailAppRepository emailAppRepository;
+
     @PostMapping("/emails")
     public List<Email> sortEmails(
+            @RequestParam("emailAddress") String emailAddress,
             @RequestParam("sortBy") String sortBy,
-            @RequestBody List<Email> emails) {
-
+            @RequestParam("folderName") String folderName,
+            @RequestParam("order") boolean order) {  ///if false reverse
+        
+                
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);        
         SortStrategy strategy = sortStrategyFactory.getStrategy(sortBy);
-        return sortService.sortEmails(emails, strategy);
+
+        List<Email> emails = sortService.sortEmails(loginUser, folderName, strategy);
+        if (!order) {
+            emails.reversed();
+        }
+        return emails;
     }
 }

@@ -21,6 +21,7 @@ public class Priority {
         }
     }
 
+    public Priority() {}
     public Priority(String priorityString) {
         this.priorityInt = prioritiesToInt.get(priorityString);
         this.priorityString = priorityString;
@@ -38,5 +39,7 @@ public class Priority {
     public String getPriorityString() {
         return this.priorityString;
     }
+
+    
 
 }

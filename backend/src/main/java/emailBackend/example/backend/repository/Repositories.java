@@ -45,7 +45,9 @@ public class Repositories {
             throw new IllegalStateException("No Folder Found With this name");
         }
 
-        for ( indexOfEmail= 0; indexOfEmail < sizeOfFolder; indexOfEmail++) {
+        int sizeOfEmails = profile.getFolders().get(indexOfFolder).getEmails().size();
+
+        for ( indexOfEmail= 0; indexOfEmail < sizeOfEmails; indexOfEmail++) {
             if (profile.getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).getId().equals(id)) {
                 return indexOfEmail;
             }
