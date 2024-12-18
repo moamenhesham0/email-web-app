@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { selectMail } from "../../features/mailSlice";
 import { useDispatch } from "react-redux";
 
-function EmailRow({ id, title, subject, description, time }) {
+function EmailRow({attachments, id, priority,read,recipient,sender,subject, textBody, timeStamp }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,11 +15,15 @@ function EmailRow({ id, title, subject, description, time }) {
   const openMail = () => {
     dispatch(
       selectMail({
+        attachments,
         id,
-        title,
+        priority,
+        read,
+        recipient,
+        sender,
         subject,
-        description,
-        time,
+        textBody,
+        timeStamp
       })
     );
     navigate("/mail");
@@ -36,14 +40,14 @@ function EmailRow({ id, title, subject, description, time }) {
           <LabelImportantOutlinedIcon />
         </IconButton>
       </div>
-      <h3 className="emailRow-title">{title}</h3>
+      <h3 className="emailRow-title">{sender}</h3>
       <div className="emailRow-message">
         <h4>
           {subject}{" "}
-          <span className="emailRow-description"> - {description}</span>
+          <span className="emailRow-description"> - {textBody}</span>
         </h4>
       </div>
-      <p className="emailRow-time">{time}</p>
+      <p className="emailRow-time">{timeStamp}</p>
     </div>
   );
 }

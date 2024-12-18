@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+public class Email implements Serializable {
 
-
-public class Email implements Serializable{
-   
     private String sender;
     private String recipient;
     private String subject;
@@ -15,12 +13,13 @@ public class Email implements Serializable{
     private String timeStamp;
     private boolean read = false;
     private List<Attachment> attachments;
-    private Priority priority; 
-    private String id ;
+    private Priority priority;
+    private String id;
 
     public String getSender() {
         return this.sender;
     }
+
     public void setSender(String sender) {
         this.sender = sender;
     }

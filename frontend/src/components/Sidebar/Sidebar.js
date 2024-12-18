@@ -10,18 +10,42 @@ import NoteIcon from "@mui/icons-material/Note";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SidebarOption from "./SidebarOption";
 import { useDispatch } from "react-redux";
-import { openSendMessage } from "../../features/mailSlice";
+import { openSendMessage, selectType } from "../../features/mailSlice";
+import { login, selectUser } from "../../features/userSlice";
+import { useSelector } from "react-redux";
+
+
 
 function Sidebar() {
   const dispatch = useDispatch();
-  const [selected,setselected] = React.useState(true);
+  const [selected,setselected] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
+  const user = useSelector(selectUser);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [folderName, setFolderName] = useState("");
+
   const handleOptionClick = (title) => {
     setselected(false);
     setSelectedOption(title);
+    dispatch(selectType(title));
+    dispatch(
+                        login({
+                          ...user,
+                          emails: null,
+                        })
+                  );
   };
+
+  const handleCreateFolder = () => {
+    // You can implement the logic for folder creation here
+    console.log("Folder Created: ", folderName);
+    setFolderName("");
+    setOpenDialog(false);
+  };
+
   return (
     <div className="sidebar">
+      <div>
       <Button
         className="sidebar-compose"
         onClick={() => dispatch(openSendMessage())}
@@ -29,6 +53,14 @@ function Sidebar() {
       >
         Compose
       </Button>
+      <Button
+        className="sidebar-compose"
+        startIcon={<AddIcon fontSize="large" />}
+        onClick={() => folderName()}
+      >
+        Create Folder
+      </Button>
+      </div>
         <SidebarOption
           Icon={InboxIcon}
           title="Inbox"
