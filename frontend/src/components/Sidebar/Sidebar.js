@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import InboxIcon from "@mui/icons-material/Inbox";
 import StarIcon from "@mui/icons-material/Star";
@@ -23,6 +23,36 @@ function Sidebar() {
   const user = useSelector(selectUser);
   const [openDialog, setOpenDialog] = useState(false);
   const [folderName, setFolderName] = useState("");
+  const [folders, setFolders] = useState([]);
+  const [isfolder, setisfolder] = useState(true);
+
+  useEffect(() => {
+    const fetchFolders = async () => {
+      if (isfolder) {
+        const queryParams = new URLSearchParams({ emailAddress: user.email });
+        try {
+          const response = await fetch(`http://localhost:8080/api/user/loadFolders?${queryParams}`, {
+            method: "GET",
+          });
+  
+          if (!response.ok) {
+            const errorDetails = await response.json();
+            throw new Error(errorDetails.message);
+          }
+  
+          const data = await response.json();
+          setFolders(data);
+          setFolders((prevFolders) => prevFolders.slice(4));
+          setisfolder(false);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+  
+    fetchFolders();
+  }, [isfolder, user]);
+
 
   const handleOptionClick = (title) => {
     setselected(false);
@@ -36,9 +66,27 @@ function Sidebar() {
                   );
   };
 
-  const handleCreateFolder = () => {
+  const handleCreateFolder = async() => {
     // You can implement the logic for folder creation here
+    try {
+      const formData = new FormData();
+      formData.append("emailAddress", user.email)
+      formData.append("folderName", folderName)
+      const response = await fetch("http://localhost:8080/api/user/addFolder", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Invalid email or password. Please try again.");
+      }
     console.log("Folder Created: ", folderName);
+    setFolders([...folders, folderName]);
     setFolderName("");
     setOpenDialog(false);
   };
@@ -56,7 +104,7 @@ function Sidebar() {
       <Button
         className="sidebar-compose"
         startIcon={<AddIcon fontSize="large" />}
-        onClick={() => folderName()}
+        onClick={() => setOpenDialog(true)}
       >
         Create Folder
       </Button>
@@ -97,8 +145,35 @@ function Sidebar() {
       onClick={() => handleOptionClick("Drafts")}
       selected={selectedOption === "Drafts"}
       />
-      <SidebarOption Icon={ExpandMoreIcon} title="More" />
+            {folders.map((folder, index) => (
+        <SidebarOption
+          key={index}
+          title={folder}
+          onClick={() => handleOptionClick(folder)}
+          selected={selectedOption === folder}
+        />
+      ))}
       
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Create a Folder</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Folder Name"
+            fullWidth
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+            autoFocus
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleCreateFolder} color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

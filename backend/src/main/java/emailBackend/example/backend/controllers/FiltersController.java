@@ -19,7 +19,6 @@ public class FiltersController {
 
     private final FiltersService filtersService;
 
-    
     @Autowired
     public FiltersController(FiltersService filtersService) {
         this.filtersService = filtersService;
@@ -28,7 +27,7 @@ public class FiltersController {
     @PostMapping
     public List<Email> requestFilter(
             @RequestParam String method,
-            @RequestBody List<Email> emails,
+            @RequestParam List<Email> emails,
             @RequestParam String filterParameter) {
         method = method.toLowerCase();
 
@@ -67,12 +66,12 @@ public class FiltersController {
             @RequestParam String priority) {
         return filtersService.filterByPriority(emails, priority);
     }
+
     @GetMapping("/subject")
     public List<Email> filterBySubject(
             @RequestBody List<Email> emails,
             @RequestParam String subject) {
         return filtersService.filterByPriority(emails, subject);
     }
-    
-}
 
+}
