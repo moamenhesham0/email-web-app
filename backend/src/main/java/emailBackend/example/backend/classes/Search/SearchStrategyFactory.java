@@ -1,5 +1,7 @@
 package emailBackend.example.backend.classes.Search;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SearchStrategyFactory {
     public SearchStrategy getStrategy(String name) {
         if (name == null) {
