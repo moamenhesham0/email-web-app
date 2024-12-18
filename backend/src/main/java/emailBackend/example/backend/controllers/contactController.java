@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import emailBackend.example.backend.classes.Contact;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.ContactService;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("api/user")
@@ -26,26 +29,41 @@ public class contactController {
     private ContactService contactService;
 
 
-    @PostMapping("addContact")
+    @PostMapping("/addContact")
     public void addContact(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("emailAddressesContact") List<String> emailAddressesContact ) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         contactService.addContact(loginUser,userName, emailAddressesContact ); 
     }
 
-    @GetMapping("getContact")
+    @PostMapping("/addEmailToContact")
+    public void addEmailToContact(@RequestParam("emailAddress") String emailAddress, @RequestParam("userName") String userName , @RequestParam("newEmailAddress") String newEmailAddress) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+         contactService.addEmailToContact(loginUser, userName, newEmailAddress);       
+
+    }
+    
+
+    @GetMapping("/getContacts")
+    public List<Contact> getContact(@RequestParam("emailAddress") String emailAddress) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return loginUser.getContacts();
+    }
+    
+    @GetMapping("/getContactByUsername")
     public List<String> getContactByUsername(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         return contactService.getContactByUsername(loginUser,userName);
     }
     
+
     
-    @DeleteMapping("deleteContactByUserName")
+    @DeleteMapping("/deleteContactByUserName")
     public void deleteContactByUserName(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName ){
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         contactService.deleteContactByUserName(loginUser,userName);
     }
     
-    @PostMapping("deleteContactEmailAddress")
+    @PostMapping("/deleteContactEmailAddress")
     public void deleteContactEmailAddress(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("contactEmailAddress") String contactEmailAddress) {
         
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);

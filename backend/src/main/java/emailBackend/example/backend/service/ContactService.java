@@ -81,4 +81,11 @@ public class ContactService {
         throw new IllegalStateException("User name does not exist for this contact");
         
     }
+
+
+    public void addEmailToContact(User profile, String userName, String newEmailAddress) {
+        List<String> emailAddresses = getContactByUsername(profile, userName);
+        emailAddresses.add(userName);
+        emailAppRepository.saveUserInSystem(profile);
+    }
 }
