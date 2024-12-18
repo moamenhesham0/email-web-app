@@ -1,6 +1,6 @@
 .app{
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .app-body{

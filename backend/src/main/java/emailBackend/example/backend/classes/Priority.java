@@ -20,16 +20,17 @@ public class Priority {
             prioritiesToString.put(val, key);
         }
     }
-    public Priority(String priorityString)
-    {
+
+    public Priority(String priorityString) {
         this.priorityInt = prioritiesToInt.get(priorityString);
         this.priorityString = priorityString;
     }
-    public Priority(int priorityInt)
-    {
+
+    public Priority(int priorityInt) {
         this.priorityInt = priorityInt;
         this.priorityString = prioritiesToString.get(priorityInt);
     }
+
     public int getPriorityInt() {
         return this.priorityInt;
     }

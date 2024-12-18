@@ -21,6 +21,9 @@ function Mail() {
     const navigate = useNavigate();
 
   const selectedMail = useSelector(selectOpenMail);
+  const generateDataUrl = (attachment) => {
+    return `data:${attachment.attType};base64,${attachment.attachment}`;
+  };
 
   return (
     <div className="mail">
@@ -34,25 +37,9 @@ function Mail() {
             <MoveToInboxIcon />
           </IconButton>
 
-          {/* <IconButton>
-            <ErrorIcon />
-          </IconButton> */}
-
           <IconButton>
             <DeleteIcon />
           </IconButton>
-
-          {/* <IconButton>
-            <EmailIcon />
-          </IconButton> */}
-
-          {/* <IconButton>
-            <WatchLaterIcon />
-          </IconButton> */}
-
-          {/* <IconButton>
-            <CheckCircleIcon />
-          </IconButton> */}
 
           <IconButton>
             <LabelImportantIcon />
@@ -62,32 +49,64 @@ function Mail() {
             <MoreVertIcon />
           </IconButton>
         </div>
-        {/* <div className="mail-toolsRight">
-          <IconButton>
-            <UnfoldMoreIcon />
-          </IconButton>
-
-          <IconButton>
-            <PrintIcon />
-          </IconButton>
-
-          <IconButton>
-            <ExitToAppIcon />
-          </IconButton>
-        </div> */}
       </div>
       <div className="mail-body">
         <div className="mail-bodyHeader">
           <div className="mail-subject">
             <h2>{selectedMail?.subject}</h2>
           </div>
-          <p>{selectedMail?.title}</p>
-          <p className="mail-time">{selectedMail?.time}</p>
+          <p>{selectedMail?.sender}</p>
+          <p className="mail-time">{selectedMail?.timeStamp}</p>
         </div>
 
         <div className="mail-message">
-          <p>{selectedMail?.description}</p>
+          <p>{selectedMail?.textBody}</p>
         </div>
+        {selectedMail?.attachments && selectedMail.attachments.length > 0 && (
+          <div className="mail-attachments">
+            <h4>Attachments:</h4>
+            <div className="mail-attachmentGrid">
+              {selectedMail.attachments.map((attachment, index) => {
+                if (attachment.attType.startsWith("image/")) {
+                  // Render images inline
+                  return (
+                    <div key={index} className="mail-attachmentImage">
+                      <img
+                        src={generateDataUrl(attachment)}
+                        alt={attachment.attName}
+                        title={`${attachment.attName} (${attachment.attSize.toFixed(2)} KB)`}
+                      />
+                      <div key={index} className="mail-attachmentLink">
+                      <a
+                        href={generateDataUrl(attachment)}
+                        download={attachment.attName}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {attachment.attName} ({attachment.attSize.toFixed(2)} KB)
+                      </a>
+                    </div>
+                    </div>
+                  );
+                } else {
+                  // Render non-image files as download links
+                  return (
+                    <div key={index} className="mail-attachmentLink">
+                      <a
+                        href={generateDataUrl(attachment)}
+                        download={attachment.attName}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {attachment.attName} ({attachment.attSize.toFixed(2)} KB)
+                      </a>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

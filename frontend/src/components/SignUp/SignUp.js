@@ -37,7 +37,6 @@ function Login() {
               }
               dispatch(
                 login({
-                  user: true,
                   email: email,
                   photoUrl: "null",
                 })
