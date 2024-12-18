@@ -27,10 +27,10 @@ public class EmailAppController {
     
     }
 
-    @PostMapping("/signup/{userName}/{email}/{password}")
+    @PostMapping("/signup")
     public void signup(@RequestParam("userName") String userName, @RequestParam("email") String email, @RequestParam("password") String password) {
-        
-        
+    
+
         emailAppService.saveUser(userName, email, password);
     }
 
