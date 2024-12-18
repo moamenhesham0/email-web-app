@@ -4,7 +4,7 @@
     right: 50px;
     background-color: #404040;
     width: 40%;
-    height: 40%;
+    height: 46%;
     max-width: 500px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -55,6 +55,7 @@
     color:red;
     text-align: right;
     padding: 2px;
+    margin: 0%;
 }
 
 .sendMail > form > input {
@@ -77,4 +78,38 @@
         width: 80%;
     }
   
+}
+.sendMail-fileInput {
+    margin: 10px;
+    padding: 10px;
+    font-size: 14px;
+    color: whitesmoke;
+    background-color: #505050;
+    border: 1px solid whitesmoke;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.sendMail-fileInput:hover {
+    background-color: #606060;
+}
+
+.sendMail-fileInput::file-selector-button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    background-color: #3079ed;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sendMail-fileInput::file-selector-button:hover {
+    background-color: #205bb5;
+}
+
+.sendMail-fileInput:focus {
+    border-color: #3079ed;
+    box-shadow: 0 0 5px rgba(48, 121, 237, 0.5);
 }
