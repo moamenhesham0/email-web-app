@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.classes.Folder;
 import emailBackend.example.backend.classes.User;
-import emailBackend.example.backend.factory.FolderFactory;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.repository.Repositories;
 
@@ -29,7 +28,8 @@ public class FoldersService {
             }
         }
 
-        Folder newFolder = FolderFactory.creatFolder(folderName);
+        // Folder newFolder = FolderFactory.creatFolder(folderName);
+        Folder newFolder = new Folder.Builder().setFolderName(folderName).build();
 
         profile.getFolders().add(newFolder);
 

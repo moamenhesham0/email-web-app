@@ -18,7 +18,7 @@ import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -58,6 +58,14 @@ public class UserController {
         return userService.getAttachments(loginUser, folderName, id);
        
     }
+
+    @PostMapping("deleteAttachment")
+    public void deleteAttachment(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName, @RequestParam("id") String id) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        userService.deleteAttachment(loginUser, folderName, id);
+        
+    }
+    
     
     
     
