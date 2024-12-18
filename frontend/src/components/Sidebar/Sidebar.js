@@ -7,6 +7,7 @@ import StarIcon from "@mui/icons-material/Star";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import NoteIcon from "@mui/icons-material/Note";
+import contactIcon from "@mui/icons-material/ContactPhone"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SidebarOption from "./SidebarOption";
 import { useDispatch } from "react-redux";
@@ -144,6 +145,13 @@ function Sidebar() {
       number={5} 
       onClick={() => handleOptionClick("Drafts")}
       selected={selectedOption === "Drafts"}
+      />
+      <SidebarOption
+      Icon={NoteIcon}
+      title="Contacts"
+      number={5} 
+      onClick={() => handleOptionClick("Contacts")}
+      selected={selectedOption === "Contacts"}
       />
             {folders.map((folder, index) => (
         <SidebarOption

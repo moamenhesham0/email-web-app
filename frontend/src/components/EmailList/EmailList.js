@@ -12,7 +12,7 @@ import EmailRow from "../EmailRow/EmailRow";
 import { useSelector } from "react-redux";
 import { login, selectUser } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
-import { openSendMessage, selectedType } from "../../features/mailSlice";
+import { selectedType } from "../../features/mailSlice";
 
 
 
@@ -29,7 +29,37 @@ function EmailList() {
       fetchEmails();
     }
   }, [user, type]);
-
+    const fetchContacts = async ()=>{
+      const queryParams = new URLSearchParams({
+        emailAddress: user.email,
+      });
+      try{
+        const response = await fetch(`http://localhost:8080/api/user/getContacts?${queryParams}`,
+          {
+            method : 'GET',
+          }
+        );
+        if(response.ok)
+        {
+          const data = await response.json();
+          setEmails(data); // Directly set the list of emails
+        dispatch(
+                    login({
+                      ...user,
+                      emails: data,
+                    })
+              );
+          
+        }else{
+          const errorDetails = await response.json();
+          throw new Error(errorDetails.message);
+        }
+      }catch (error)
+      {
+        console.error("Error fetching Contacts:", error);
+        alert("Failed to fetch Contacts. Please try again.");
+      }
+    };
     const fetchEmails = async () => {
       console.log(user.email);
       console.log(type);
