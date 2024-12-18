@@ -12,6 +12,40 @@ import EmailRow from "../EmailRow/EmailRow";
 
 
 function EmailList() {
+  const [emails, setEmails] = useState([]);
+
+  useEffect(() => {
+  const fetchEmails = async () => {
+
+    
+    // Replace this with your API call
+    const mockEmails = [
+      {
+        id: "1",
+        data: {
+          to: "user1@example.com",
+          subject: "Welcome to our service!",
+          message: "Thank you for signing up.",
+          timestamp: { seconds: 1673452800 }, // Mock timestamp
+        },
+      },
+      {
+        id: "2",
+        data: {
+          to: "user2@example.com",
+          subject: "Your Invoice",
+          message: "Here is your invoice for this month.",
+          timestamp: { seconds: 1673539200 },
+        },
+      },
+    ];
+    setEmails(mockEmails);
+  };
+
+  fetchEmails();
+}, []);
+
+
   return (
     <div className="emailList">
       <div className="emailList-settings">
@@ -44,7 +78,7 @@ function EmailList() {
       </div>
 
       <div className="emailList-list">
-        {/* {emails.map(({ id, data: { to, subject, message, timestamp } }) => (
+        {emails.map(({ id, data: { to, subject, message, timestamp } }) => (
           <EmailRow
             id={id}
             key={id}
@@ -53,27 +87,7 @@ function EmailList() {
             description={message}
             time={new Date(timestamp?.seconds * 1000).toUTCString()}
           />
-        ))} */}
-        <EmailRow
-          title="Twitch"
-          subject="Hey fellow streamer!!"
-          description="This is a DOPE"
-          time="10pm"
-        />
-        <EmailRow
-          title="Epic Games"
-          subject="Update to our Player Agreements"
-          description="Re: Update to our Player Agreement In June, we shared that we’re making some updates to our End User License Agreement (EULA) for Fortnite. This took longer than expected and the updated agreement will go into effect on December 13, 2024, when we’ll ask you to review and accept the terms the next time you log into Fortnite.
-We’ve posted these changes online so you can take a look at them before they go into effect. To review them, click “Read New Terms” at the top of the Fortnite End User License Agreement webpage."
-          time="5pm"
-        />
-        <EmailRow
-          title="Course Hero "
-          subject="Welcome to Course Hero"
-          description="Welcome to studying, superpowered
-You made the first step toward smarter studying—way to go. See all the ways you can superpower your studying with Course Hero."
-          time="7am"
-        />
+        ))}
       </div>
     </div>
   );

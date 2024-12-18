@@ -14,25 +14,52 @@ function Login() {
   const navigate = useNavigate();
 
 
-  const signUp = () => {
-    // Simulate backend validation
-    if (email === "test@example.com" && password === "password123") {
-      const mockUser = {
-        displayName: "Test",
-        email: email,
-        photoUrl: "https://via.placeholder.com/150",
-      };
+  const signUp = async() => {
 
-      dispatch(
-        login({
-          displayName: mockUser.displayName,
-          email: mockUser.email,
-          photoUrl: mockUser.photoUrl,
-        })
-      );
-    } else {
-      alert("Invalid email or password. Please try again.");
-    }
+    const formData = new FormData();
+    const fullName = `${FN} ${LN}`;
+    formData.append("userName", fullName)
+    formData.append("email", email)
+    formData.append("password", password)
+        try {
+              const response = await fetch("http://localhost:8080/api/service/signup", {
+                method: "POST",
+                body: formData,
+              });
+        
+              if (!response.ok) {
+                const errorDetails = await response.json();
+                throw new Error(errorDetails.message);
+              }
+            } catch (error) {
+              console.error(error);
+              alert("This email is already taken.Please Try another one");
+              }
+              dispatch(
+                login({
+                  user: true,
+                  email: email,
+                  photoUrl: "null",
+                })
+          );
+
+    // if (email === "test@example.com" && password === "password123") {
+    //   const mockUser = {
+    //     displayName: "Test",
+    //     email: email,
+    //     photoUrl: "https://via.placeholder.com/150",
+    //   };
+
+    //   dispatch(
+    //     login({
+    //       displayName: mockUser.displayName,
+    //       email: mockUser.email,
+    //       photoUrl: mockUser.photoUrl,
+    //     })
+    //   );
+    // } else {
+    //   alert("Invalid email or password. Please try again.");
+    // }
   };
 
   return (

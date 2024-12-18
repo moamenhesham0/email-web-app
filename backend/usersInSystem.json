@@ -1,0 +1,74 @@
+{
+  "ali@ali.com": {
+    "username": "ali",
+    "password": "1234",
+    "emailAddress": "ali@ali.com",
+    "folders": [
+      {
+        "folderName": "Inbox",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Sent",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Draft",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Trash",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      }
+    ],
+    "contacts": []
+  },
+  "test@example.com": {
+    "username": "3m0 Ahmed",
+    "password": "1234",
+    "emailAddress": "test@example.com",
+    "folders": [
+      {
+        "folderName": "Inbox",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Sent",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Draft",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      },
+      {
+        "folderName": "Trash",
+        "readEmails": 0,
+        "unreadEmails": 0,
+        "emails": [],
+        "emailCount": 0
+      }
+    ],
+    "contacts": []
+  }
+}
