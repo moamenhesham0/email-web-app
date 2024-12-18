@@ -150,10 +150,10 @@ const handleContacts = () => {
       />
       <SidebarOption
       Icon={NoteIcon}
-      title="Drafts"
+      title="Draft"
       number={5} 
-      onClick={() => handleOptionClick("Drafts")}
-      selected={selectedOption === "Drafts"}
+      onClick={() => handleOptionClick("Draft")}
+      selected={selectedOption === "Draft"}
       />
             <SidebarOption
       Icon={NoteIcon}

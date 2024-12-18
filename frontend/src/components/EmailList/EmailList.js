@@ -9,10 +9,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import KeyboardHideIcon from "@mui/icons-material/KeyboardHide";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EmailRow from "../EmailRow/EmailRow";
+import Contact from "../Contacts/contact";
 import { useSelector } from "react-redux";
 import { login, selectUser } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { openSendMessage, selectedType } from "../../features/mailSlice";
+import { Button,TextField,Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+
 
 
 
@@ -20,9 +24,16 @@ import { openSendMessage, selectedType } from "../../features/mailSlice";
 function EmailList() {
   const user = useSelector(selectUser);
   const [emails, setEmails] = useState(user.emails || []);
+  const [contacts, setcontacts] = useState([]);
+  const [contactName, setcontactName] = useState("");
+  const [emailAddress, setemailAddress] = useState([]);
+  const [iscontacts, setiscontacts] = useState(false);
   const type = useSelector(selectedType);
   const dispatch = useDispatch();
+  const [openDialog, setOpenDialog] = useState(false);
 
+
+  
   useEffect(() => {
     console.log(user.emails);
     if(!user.emails){
@@ -40,6 +51,7 @@ function EmailList() {
   }, [user, type]);
 
   const fetchContacts = async ()=>{
+    setEmails([]);
     const queryParams = new URLSearchParams({
       emailAddress: user.email,
     });
@@ -52,11 +64,18 @@ function EmailList() {
       if(response.ok)
       {
         const data = await response.json();
-        setEmails(data); // Directly set the list of emails
+        const normalizedData = data.map(contact => ({
+          ...contact,
+          emailAddress: Array.isArray(contact.emailAddress) ? contact.emailAddress : [], // Default to empty array if missing
+        }));
+      
+        console.log(normalizedData);
+        setcontacts(normalizedData);
+        setiscontacts(true);
       dispatch(
                   login({
                     ...user,
-                    emails: data,
+                    contacts: false,
                   })
             );
         
@@ -71,6 +90,8 @@ function EmailList() {
     }
   };
     const fetchEmails = async () => {
+      setiscontacts(false);
+      setcontacts([]);
       console.log(user.email);
       console.log(type);
       const queryParams = new URLSearchParams({
@@ -110,9 +131,15 @@ function EmailList() {
           <IconButton>
             <ArrowDropDownIcon />
           </IconButton>
-          <IconButton onClick={()=> fetchEmails()}>
+          {!iscontacts &&<IconButton onClick={()=> fetchEmails()}>
             <RedoIcon />
-          </IconButton>
+          </IconButton>}
+          {iscontacts &&<Button
+        startIcon={<AddIcon fontSize="large" />}
+        onClick={() => setOpenDialog(true)}
+      >
+        Add Contact
+      </Button>}
           <IconButton>
             <MoreVertIcon />
           </IconButton>
@@ -147,7 +174,41 @@ function EmailList() {
           timeStamp={timeStamp}
           />
         ))}
+        {contacts.map(({ userName,emailAdress }) => (
+          <Contact
+          userName={userName}
+          emailAddress={emailAdress}
+          />
+        ))}
+
       </div>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Add a Contact</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Contact Name"
+            fullWidth
+            value={contactName}
+            onChange={(e) => setcontactName(e.target.value)}
+            autoFocus
+          />
+          <TextField
+            label="Emails"
+            fullWidth
+            value={emailAddress}
+            onChange={(e) => setemailAddress(e.target.value)}
+            autoFocus
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button  color="primary">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

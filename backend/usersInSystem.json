@@ -59,7 +59,9 @@
         "emailCount": 0
       }
     ],
-    "contacts": []
+    "contacts": [
+      { "userName": "muhannd", "emailAdress": ["muh@g.com", "say@g.com"] }
+    ]
   },
   "test@example.com": {
     "username": "Ahmed Ahmed",
