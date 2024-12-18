@@ -3,6 +3,8 @@ import "./SendMail.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { login, selectUser } from "../../features/userSlice";
 import { closeSendMessage } from "../../features/mailSlice";
 import {
   Button,
@@ -14,6 +16,8 @@ import {
 
 function SendMail() {
   const [selectedOption, setSelectedOption] = React.useState("Minor");
+  const user = useSelector(selectUser);
+
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -29,20 +33,21 @@ function SendMail() {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    formData.append("senderEmail", "johndoe@example.com");
+    formData.append("senderEmail", user.email);
     formData.append("recipientEmail", data.recipientEmail);
     formData.append("subject", data.subject);
     formData.append("textBody", data.textBody);
     formData.append("sendTheEmail", data.sendTheEmail);
     formData.append("priority", selectedOption);
     if (data.attachments) {
+      console.log(data.attachments);
       Array.from(data.attachments).forEach((file) =>
         formData.append("attachments", file)
       );
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/emails/createEmail", {
+      const response = await fetch("http://localhost:8080/api/user/createEmail", {
         method: "POST",
         body: formData,
       });
@@ -114,8 +119,16 @@ function SendMail() {
         <input
           type="file"
           multiple
-          {...register("attachments")}
-        />
+          onChange={(e) => {
+            const files = e.target.files; // Get FileList
+            // Manually attach files to the form data
+            e.target.setCustomValidity("");
+            register("attachments").onChange({
+              target: { name: "attachments", value: files },
+            });
+          }}
+          className="sendMail-fileInput"
+          />
                 <input
         type="hidden"
         value="true"

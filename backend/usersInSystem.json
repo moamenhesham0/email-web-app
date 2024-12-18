@@ -1,42 +1,54 @@
 {
-  "ali@ali.com": {
-    "username": "ali",
+  "test2@example.com": {
+    "username": "Farag Hany",
     "password": "1234",
-    "emailAddress": "ali@ali.com",
+    "emailAddress": "test2@example.com",
     "folders": [
       {
         "folderName": "Inbox",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": [
+          {
+            "sender": "test@example.com",
+            "recipient": "test2@example.com",
+            "subject": "daddy",
+            "textBody": "Spank me daddy",
+            "timeStamp": "2024-12-18T11:07:39.5895764+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "00c9a265-8a6c-4bde-ab99-3c89d8b1f15c"
+          }
+        ]
       },
       {
         "folderName": "Sent",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       },
       {
         "folderName": "Draft",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       },
       {
         "folderName": "Trash",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       }
     ],
     "contacts": []
   },
   "test@example.com": {
-    "username": "3m0 Ahmed",
+    "username": "Ahmed Ahmed",
     "password": "1234",
     "emailAddress": "test@example.com",
     "folders": [
@@ -44,29 +56,41 @@
         "folderName": "Inbox",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       },
       {
         "folderName": "Sent",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": [
+          {
+            "sender": "test@example.com",
+            "recipient": "test2@example.com",
+            "subject": "daddy",
+            "textBody": "Spank me daddy",
+            "timeStamp": "2024-12-18T11:07:39.5895764+02:00[Africa/Cairo]",
+            "read": false,
+            "attachments": [],
+            "priority": null,
+            "id": "00c9a265-8a6c-4bde-ab99-3c89d8b1f15c"
+          }
+        ]
       },
       {
         "folderName": "Draft",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       },
       {
         "folderName": "Trash",
         "readEmails": 0,
         "unreadEmails": 0,
-        "emails": [],
-        "emailCount": 0
+        "emailCount": 0,
+        "emails": []
       }
     ],
     "contacts": []
