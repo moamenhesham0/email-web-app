@@ -1,6 +1,7 @@
 package emailBackend.example.backend.classes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,6 +61,53 @@ public class User implements Serializable {
                 + folders + ", contacts=" + contacts + "]";
     } 
 
-        
+     
+    
+     public static class Builder {
+        private User user;
+
+        public Builder() {
+            user = new User();  // Initialize the User instance
+
+            List<Folder> defaultFolders = new ArrayList<>();
+            defaultFolders.add(new Folder.Builder().setFolderName("Inbox").build());
+            defaultFolders.add(new Folder.Builder().setFolderName("Sent").build());
+            defaultFolders.add(new Folder.Builder().setFolderName("Draft").build());
+            defaultFolders.add(new Folder.Builder().setFolderName("Trash").build());
+            user.setFolders(defaultFolders);
+        }
+
+        // Setter methods for each field
+        public Builder setUsername(String username) {
+            user.setUsername(username);
+            return this;
+        }
+
+        public Builder setPassword(String password) {
+            user.setPassword(password);
+            return this;
+        }
+
+        public Builder setEmailAddress(String emailAddress) {
+            user.setEmailAddress(emailAddress);
+            return this;
+        }
+
+        public Builder setFolders(List<Folder> folders) {
+            user.setFolders(folders);
+            return this;
+        }
+
+        public Builder setContacts(List<Contact> contacts) {
+            user.setContacts(contacts);
+            return this;
+        }
+
+
+        // Build the User object
+        public User build() { 
+            return user;  // Return the constructed User object
+        }
+    }
 
 }

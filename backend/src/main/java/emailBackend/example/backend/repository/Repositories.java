@@ -32,18 +32,8 @@ public class Repositories {
         
 
         
-        int indexOfFolder ;
-        int sizeOfFolder = profile.getFolders().size();
+        int indexOfFolder = getFolderByName(profile, folderName);
         int indexOfEmail;
-        for ( indexOfFolder= 0; indexOfFolder < sizeOfFolder; indexOfFolder++) {
-            if (profile.getFolders().get(indexOfFolder).getFolderName().equals(folderName)) {
-                break;
-            }
-            
-        }
-        if (indexOfFolder == sizeOfFolder) {
-            throw new IllegalStateException("No Folder Found With this name");
-        }
 
         int sizeOfEmails = profile.getFolders().get(indexOfFolder).getEmails().size();
 

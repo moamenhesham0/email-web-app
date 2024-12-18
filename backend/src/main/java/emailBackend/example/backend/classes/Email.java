@@ -95,4 +95,63 @@ public class Email implements Serializable {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+
+    public static class Builder {
+
+        private Email email;
+
+        public Builder() {
+            email = new Email();
+        }
+
+        public Builder setSender(String sender) {
+            email.setSender(sender); // Use setter
+            return this;
+        }
+
+        public Builder setRecipient(String recipient) {
+            email.setRecipient(recipient); // Use setter
+            return this;
+        }
+
+        public Builder setSubject(String subject) {
+            email.setSubject(subject); // Use setter
+            return this;
+        }
+
+        public Builder setTextBody(String textBody) {
+            email.setTextBody(textBody); // Use setter
+            return this;
+        }
+
+        public Builder setTimeStamp(String timeStamp) {
+            email.setTimeStamp(timeStamp); // Use setter
+            return this;
+        }
+
+        public Builder setRead(boolean read) {
+            email.setRead(read); // Use setter
+            return this;
+        }
+
+        public Builder setAttachments(List<Attachment> attachments) {
+            email.setAttachments(attachments); // Use setter
+            return this;
+        }
+
+        public Builder setPriority(Priority priority) {
+            email.setPriority(priority); // Use setter
+            return this;
+        }
+
+        public Builder setId(String id) {
+            email.setId(id); // Use setter
+            return this;
+        }
+
+        public Email build() {
+            return email;
+        }
+    }
 }

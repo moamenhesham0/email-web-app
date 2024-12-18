@@ -1,7 +1,11 @@
 package emailBackend.example.backend.service;
 
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -12,7 +16,6 @@ import emailBackend.example.backend.classes.Attachment;
 import emailBackend.example.backend.classes.Email;
 import emailBackend.example.backend.classes.Priority;
 import emailBackend.example.backend.classes.User;
-import emailBackend.example.backend.factory.EmailFactory;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.repository.Repositories;
 
@@ -22,24 +25,30 @@ public class UserService {
     @Autowired
     EmailAppRepository emailAppRepository;
 
-    @Autowired
-    private EmailFactory emailFactory;
 
     @Autowired
     private Repositories repositories;
 
      
-
+    
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
     
     public Email createEmail(User profile,String senderEmail,String recipientEmail, String subject, String textBody, List<Attachment> attachments, boolean sendTheEmail, String priority) {
         
        
         
         Priority priorityGet  = new Priority(priority);
-        Email email = emailFactory.createEmail(senderEmail, recipientEmail,subject ,textBody, attachments);
+        // Email email = emailFactory.createEmail(senderEmail, recipientEmail,subject ,textBody, attachments);
+
+        Email email = new Email.Builder()
+        .setSender(senderEmail)
+        .setRecipient(recipientEmail)
+        .setSubject(subject)
+        .setTextBody(textBody)
+        .setAttachments(attachments)
+        .setPriority(priorityGet)
+        .build();
         if (!sendTheEmail) {
-            System.out.println("i set prio");
-            email.setPriority(priorityGet);
             profile.getFolders().get(2).getEmails().add(email);
             System.out.println(profile.getFolders().get(2).toString());
         }else{
@@ -51,7 +60,6 @@ public class UserService {
                 emailAppRepository.saveUserInSystem(user);
                 
                 profile.getFolders().get(1).getEmails().add(email);
-                profile.getFolders().get(1).getEmails().getLast().setPriority(priorityGet);
                 System.out.println(profile.getFolders().get(1).toString());
             }
            
@@ -80,6 +88,10 @@ public class UserService {
     }
 
     public List<Email> getAllEmails(User profile, String folderName){
+        if (folderName.equals("Trash")) {
+            removeOldEmails(profile);
+            return profile.getFolders().get(3).getEmails();
+        }
         int indexOfFolder = repositories.getFolderByName(profile,folderName);
         
         return profile.getFolders().get(indexOfFolder).getEmails();
@@ -125,6 +137,7 @@ public class UserService {
     public void deleteEmailById(User profile,String folderName,List<String> ids) {
       
         int indexOfFolder = repositories.getFolderByName(profile,folderName);
+        System.out.println(indexOfFolder);
         for (String id : ids) {
      
             int indexOfEmail = repositories.getEmailById(profile,folderName, id);
@@ -184,7 +197,32 @@ public class UserService {
     }
 
 
+    public void deleteAttachment(User profile, String folderName, String id) {
+        int indexOfFolder = repositories.getFolderByName(profile,folderName);
+        int indexOfEmail = repositories.getEmailById(profile,folderName, id);
 
+        profile.getFolders().get(indexOfFolder).getEmails().get(indexOfEmail).setAttachments(new ArrayList<>());
+        emailAppRepository.saveUserInSystem(profile);
+    }
+
+
+
+    public void removeOldEmails(User profile) {
+        
+        ZonedDateTime now = ZonedDateTime.now();
+
+        Iterator<Email> iterator = profile.getFolders().get(3).getEmails().iterator();
+        while (iterator.hasNext()) {
+            Email email = iterator.next();
+            ZonedDateTime emailTime = ZonedDateTime.parse(email.getTimeStamp(), FORMATTER);
+
+            // Check if the email is older than 30 days
+            if (ChronoUnit.DAYS.between(emailTime, now) > 30) {
+                iterator.remove();
+                emailAppRepository.saveUserInSystem(profile);
+            }
+        }
+    }
 
 
 

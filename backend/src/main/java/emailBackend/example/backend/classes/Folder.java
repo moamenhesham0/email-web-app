@@ -58,4 +58,44 @@ public class Folder implements Serializable {
                 + ", EmailCount=" + EmailCount + ", Emails=" + Emails + "]";
     }
 
+
+    public static class Builder {
+        private Folder folder;
+
+        public Builder() {
+            folder = new Folder();  // Initialize Folder instance
+        }
+
+        // Builder setter methods
+        public Builder setFolderName(String folderName) {
+            folder.setFolderName(folderName);
+            return this;
+        }
+
+        public Builder setReadEmails(int readEmails) {
+            folder.setReadEmails(readEmails);
+            return this;
+        }
+
+        public Builder setUnreadEmails(int unreadEmails) {
+            folder.setUnreadEmails(unreadEmails);
+            return this;
+        }
+
+        public Builder setEmailCount(int emailCount) {
+            folder.setEmailCount(emailCount);
+            return this;
+        }
+
+        public Builder setEmails(List<Email> emails) {
+            folder.setEmails(emails);
+            return this;
+        }
+
+        // Build method to return the constructed Folder object
+        public Folder build() {
+            return folder;
+        }
+    }
+
 }
