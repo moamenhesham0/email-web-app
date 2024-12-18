@@ -1,5 +1,6 @@
 package emailBackend.example.backend.classes.Sort;
-
+import org.springframework.stereotype.Component;
+@Component
 public class SortStrategyFactory {
     public SortStrategy getStrategy(String name){
         if(name == null){
