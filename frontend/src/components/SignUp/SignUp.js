@@ -30,17 +30,18 @@ function Login() {
               if (!response.ok) {
                 const errorDetails = await response.json();
                 throw new Error(errorDetails.message);
+              }else{
+                dispatch(
+                  login({
+                    email: email,
+                    photoUrl: "null",
+                  })
+                );
               }
             } catch (error) {
               console.error(error);
               alert("This email is already taken.Please Try another one");
               }
-              dispatch(
-                login({
-                  email: email,
-                  photoUrl: "null",
-                })
-          );
 
     // if (email === "test@example.com" && password === "password123") {
     //   const mockUser = {

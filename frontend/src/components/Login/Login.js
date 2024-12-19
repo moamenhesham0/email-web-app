@@ -25,16 +25,18 @@ function Login() {
             const errorDetails = await response.json();
             throw new Error(errorDetails.message);
           }
+          else{
+            dispatch(
+              login({
+                email: email,
+                photoUrl: "null",
+              })
+        );
+          }
         } catch (error) {
           console.error(error);
           alert("Invalid email or password. Please try again.");
           }
-          dispatch(
-            login({
-              email: email,
-              photoUrl: "null",
-            })
-      );
   };
 
   return (
