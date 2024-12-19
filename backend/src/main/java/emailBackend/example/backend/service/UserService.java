@@ -227,6 +227,12 @@ public class UserService {
     }
 
 
+    public int getFolderSize(User profile, String folderName) {
+        int indexOfFolder = repositories.getFolderByName(profile, folderName);
+        return profile.getFolders().get(indexOfFolder).getEmails().size();
+    }
+
+
 
 
     
