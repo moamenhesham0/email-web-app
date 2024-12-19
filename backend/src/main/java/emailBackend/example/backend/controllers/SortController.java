@@ -30,10 +30,9 @@ public class SortController {
             @RequestParam("emailAddress") String emailAddress,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("folderName") String folderName,
-            @RequestParam("order") boolean order) {  ///if false reverse
-        
-                
-        User loginUser = emailAppRepository.getUserByEmail(emailAddress);        
+            @RequestParam("order") boolean order) { /// if false reverse
+
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         SortStrategy strategy = sortStrategyFactory.getStrategy(sortBy);
 
         List<Email> emails = sortService.sortEmails(loginUser, folderName, strategy);

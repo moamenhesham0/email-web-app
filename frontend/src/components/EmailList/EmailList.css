@@ -2,7 +2,11 @@
     flex: 1;
     overflow: scroll;
 }
-
+.sendMail-dropdown {
+    min-width: 150px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
 .emailList-settings {
     position: sticky;
     top: 0;

@@ -18,6 +18,12 @@ import { openSendMessage, selectedType } from "../../features/mailSlice";
 import { useSelectedEmails } from "../Context/selectedEmailsContext";
 import { Button,TextField,Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import {
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 
 
@@ -36,6 +42,38 @@ function EmailList() {
   const { selectedEmails, removeEmail, addEmail } = useSelectedEmails();
   const [left, setleft] = useState(0);
   const [right, setright] = useState(1);
+  const [selectedOption, setSelectedOption] = useState("Default");
+  const handleOptionChange = async (event) => {
+    setSelectedOption(event.target.value);
+    console.log(selectedOption);
+    if(selectedOption === "Default"){
+    try {
+      const formData = new FormData();
+      formData.append("emailAddress", user.email)
+      formData.append("sortBy", "priority")
+      formData.append("folderName", "Inbox")
+      formData.append("order", true)
+      const response = await fetch("http://localhost:8080/api/sort/emails", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message);
+      }
+      const data = await response.json();
+      console.log(data);
+      setEmails(data);
+    } catch (error) {
+      console.error(error);
+      alert("Invalid email or password. Please try again.");
+      }
+    }
+    else{
+      fetchEmails();
+    }
+  };
 
 
 
@@ -180,41 +218,46 @@ const addContacts = async () =>{
       if (emails.length === 0) return; // Do nothing if there are no emails.
     
       if (selectedEmails.length === emails.length) {
+        emails.forEach(email => {
+          removeEmail(email.id);
+        }); // Uncheck all if already all are selected
         // Unselect all emails
         emails.forEach((email) => removeEmail(email.id));
       } else {
+        // Create a new array of email IDs for selection
+        emails.forEach(email => {
+          addEmail(email.id);
+        }); // Select all emails
         // Select all emails
         emails.forEach((email) => {
           if (!selectedEmails.includes(email.id)) addEmail(email.id);
         });
       }
     };
-    
-    
 
     const deleteSelectedEmails = async () => {
       if (selectedEmails.length === 0) {
         alert("No emails selected for deletion.");
         return;
       }
-    
+
       const formData = new URLSearchParams({
         emailAddress: user.email,
         folderName: type,
       });
-    
+
       selectedEmails.forEach((id) => formData.append("ids", id));
-    
+
       try {
         const response = await fetch(`http://localhost:8080/api/user/deleteEmail?${formData.toString()}`, {
           method: "DELETE",
         });
-    
+
         if (!response.ok) {
           const errorDetails = await response.json();
           throw new Error(errorDetails.message);
         }
-    
+
         alert("Emails deleted successfully.");
         emails.forEach(email => {
           removeEmail(email.id);
@@ -262,6 +305,19 @@ const addContacts = async () =>{
         </div>
 
         <div className="emailList-settingsRight">
+        {!iscontacts && (
+          <FormControl className="sendMail-dropdown" size="small">
+          <InputLabel id="option-select-label"></InputLabel>
+          <Select
+            labelId="option-select-label"
+            value={selectedOption}
+            onChange={handleOptionChange}
+            >
+            <MenuItem value="Default">Default</MenuItem>
+            <MenuItem value="Priority">Priority</MenuItem>
+          </Select>
+        </FormControl>
+          )}
         <IconButton>
   <ChevronLeftIcon onClick={() => { setleft(left - 1); setright(right - 1); }} />
 </IconButton>
