@@ -30,7 +30,7 @@ function Sidebar() {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
 const [currentFolder, setCurrentFolder] = useState("");
 const [newFolderName, setNewFolderName] = useState("");
-
+const [folderSizes, setFolderSizes] = useState({});
   useEffect(() => {
     const fetchFolders = async () => {
       if (isfolder) {
@@ -49,6 +49,11 @@ const [newFolderName, setNewFolderName] = useState("");
           setFolders(data);
           setFolders((prevFolders) => prevFolders.slice(4));
           setisfolder(false);
+          const sizes = {};
+          for (const folder of data) {
+            sizes[folder] = await fetchFolderSize(folder);
+          }
+        setFolderSizes(sizes);
         } catch (error) {
           console.error(error);
         }
@@ -80,6 +85,27 @@ const [newFolderName, setNewFolderName] = useState("");
     } catch (error) {
       console.error(error);
       alert("Failed to delete folder. Please try again.");
+    }
+  };
+
+
+  const fetchFolderSize = async (folder) => {
+    const queryParams = new URLSearchParams({
+      emailAddress: user.email,
+      folderName: folder,
+    });
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/user/folderSize?${queryParams}`
+      );
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Failed to fetch size for folder ${folder}:`, error);
+      return 0; // Default size in case of error
     }
   };
 
@@ -190,18 +216,11 @@ const handleContacts = () => {
         />
 
       <SidebarOption
-      Icon={StarIcon} 
+      Icon={DeleteIcon} 
       title="Trash" 
       number={12} 
       onClick={() => handleOptionClick("Trash")}
       selected={selectedOption === "Trash"}
-      />
-      <SidebarOption
-      Icon={LabelImportantIcon}
-      title="Important"
-      number={12} 
-      onClick={() => handleOptionClick("Important")}
-      selected={selectedOption === "Important"}
       />
       <SidebarOption
       Icon={NearMeIcon}
