@@ -86,6 +86,7 @@ const [newFolderName, setNewFolderName] = useState("");
 const handleContacts = () => {
   setselected(false);
   setSelectedOption("Contacts");
+  dispatch(selectType("Contacts"));
   dispatch(
     login({
       ...user,

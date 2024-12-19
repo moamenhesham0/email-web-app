@@ -70,12 +70,21 @@ const addContacts = async () =>{
 }
 
   useEffect(() => {
-    if(user.search){
+    if(user.Esearch){
       setEmails(user.emails)
                 dispatch(
                           login({
                             ...user,
-                            search: false,
+                            Esearch: false,
+                          })
+                      );
+    }
+    if(user.Csearch){
+      setcontacts(user.emails)
+                dispatch(
+                          login({
+                            ...user,
+                            Csearch: false,
                           })
                       );
     }
@@ -241,7 +250,7 @@ const addContacts = async () =>{
             <MoreVertIcon />
           </IconButton>
           {selectedEmails.length != 0 && ( // Conditionally render Delete button
-            <IconButton onClick={deleteSelectedEmails}>
+            <IconButton >
               <DeleteIcon />
             </IconButton>
           )}
@@ -278,7 +287,7 @@ const addContacts = async () =>{
           timeStamp={timeStamp}
           />
         ))}
-        {contacts.map(({ userName,emailAdress }) => (
+        {contacts.slice().reverse().slice(15*left, 15*right).map(({ userName,emailAdress }) => (
           <Contact
           userName={userName}
           emailAddress={emailAdress}

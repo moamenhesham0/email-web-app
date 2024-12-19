@@ -4,6 +4,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
+    folder: "Inbox",
   },
   reducers: {
     login: (state, action) => {

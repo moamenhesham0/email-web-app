@@ -15,12 +15,9 @@ import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
 import emailBackend.example.backend.service.ContactService;
 
-
-
 @RestController
 @RequestMapping("api/user")
 public class contactController {
-
 
     @Autowired
     EmailAppRepository emailAppRepository;
@@ -28,49 +25,52 @@ public class contactController {
     @Autowired
     private ContactService contactService;
 
-
     @PostMapping("/addContact")
-    public void addContact(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("emailAddressesContact") List<String> emailAddressesContact ) {
+    public void addContact(@RequestParam("emailAddress") String emailAddress, @RequestParam("userName") String userName,
+            @RequestParam("emailAddressesContact") List<String> emailAddressesContact) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-        contactService.addContact(loginUser,userName, emailAddressesContact ); 
+        contactService.addContact(loginUser, userName, emailAddressesContact);
     }
 
     @PostMapping("/addEmailToContact")
-    public void addEmailToContact(@RequestParam("emailAddress") String emailAddress, @RequestParam("userName") String userName , @RequestParam("newEmailAddress") String newEmailAddress) {
+    public void addEmailToContact(@RequestParam("emailAddress") String emailAddress,
+            @RequestParam("userName") String userName, @RequestParam("newEmailAddress") String newEmailAddress) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-         contactService.addEmailToContact(loginUser, userName, newEmailAddress);       
+        contactService.addEmailToContact(loginUser, userName, newEmailAddress);
 
     }
-    
 
     @GetMapping("/getContacts")
     public List<Contact> getContact(@RequestParam("emailAddress") String emailAddress) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
         return loginUser.getContacts();
     }
-    
-    @GetMapping("/getContactByUsername")
-    public List<String> getContactByUsername(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName) {
-        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-        return contactService.getContactByUsername(loginUser,userName);
-    }
-    
 
-    
+    @GetMapping("/getContactByUsername")
+    public List<String> getContactByUsername(@RequestParam("emailAddress") String emailAddress,
+            @RequestParam("userName") String userName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return contactService.getContactByUsername(loginUser, userName);
+    }
+
     @DeleteMapping("/deleteContactByUserName")
-    public void deleteContactByUserName(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName ){
+    public void deleteContactByUserName(@RequestParam("emailAddress") String emailAddress,
+            @RequestParam("userName") String userName) {
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-        contactService.deleteContactByUserName(loginUser,userName);
+        contactService.deleteContactByUserName(loginUser, userName);
     }
-    
+
     @PostMapping("/deleteContactEmailAddress")
-    public void deleteContactEmailAddress(@RequestParam("emailAddress") String emailAddress,@RequestParam("userName") String userName, @RequestParam("contactEmailAddress") String contactEmailAddress) {
-        
+    public void deleteContactEmailAddress(@RequestParam("emailAddress") String emailAddress,
+            @RequestParam("userName") String userName,
+            @RequestParam("contactEmailAddress") String contactEmailAddress) {
+
         User loginUser = emailAppRepository.getUserByEmail(emailAddress);
-        contactService.deleteContactEmailAddress(loginUser,userName, contactEmailAddress);
-       
+        contactService.deleteContactEmailAddress(loginUser, userName, contactEmailAddress);
+
     }
-    @GetMapping("/searchContacts")
+
+    @PostMapping("/searchContacts")
     public List<Contact> searchContacts(
             @RequestParam("emailAddress") String emailAddress,
             @RequestParam("query") String query) {
