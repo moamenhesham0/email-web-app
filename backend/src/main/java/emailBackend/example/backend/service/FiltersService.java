@@ -1,39 +1,34 @@
 package emailBackend.example.backend.service;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import emailBackend.example.backend.classes.Email;
-import emailBackend.example.backend.classes.Filters.AttachmentFilter;
-import emailBackend.example.backend.classes.Filters.PriorityFilter;
-import emailBackend.example.backend.classes.Filters.SenderFilter;
-import emailBackend.example.backend.classes.Filters.SubjectFilter;
+import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.interfaces.Filter;
+
+import emailBackend.example.backend.repository.Repositories;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Service
 public class FiltersService {
 
+    @Autowired
+    Repositories repositories;
+   
+    public List<Email> filterEmails(User profile, String folderName, Filter filter, String keyword) {
+        int folderIndex = repositories.getFolderByName(profile, folderName);
 
-    private static Filter senderFilter = new SenderFilter();
-    private static Filter attachmentFilter = new AttachmentFilter();
-    private static Filter priorityFilter  = new PriorityFilter();
-    private static Filter subjectFilter = new SubjectFilter();
-    public List<Email> filterBySender(List<Email> emails , String sender)
-    {
-        return senderFilter.filter(emails, sender);
-    }
+        List<Email> emails = profile.getFolders().get(folderIndex).getEmails();
+        if (emails == null || emails.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-    public List<Email> filterByPriority(List<Email> emails , String priority)
-    {
-        return priorityFilter.filter(emails, priority);
-    }
-
-    public List<Email> filterByAttachment(List<Email> emails , String attachment)
-    {
-        return attachmentFilter.filter(emails, attachment);
-    }
-    public List<Email> filterBySubject(List<Email> emails , String subject)
-    {
-        return subjectFilter.filter(emails, subject);
+        // Apply the search strategy's `search` method
+        return filter.filter(emails, keyword);
     }
 }
