@@ -34,6 +34,9 @@ function EmailList() {
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
   const { selectedEmails, removeEmail, addEmail } = useSelectedEmails();
+  const [left, setleft] = useState(0);
+  const [right, setright] = useState(1);
+
 
 
 const addContacts = async () =>{
@@ -205,12 +208,12 @@ const addContacts = async () =>{
         </div>
 
         <div className="emailList-settingsRight">
-          <IconButton>
-            <ChevronLeftIcon />
-          </IconButton>
-          <IconButton>
-            <ChevronRightIcon />
-          </IconButton>
+        <IconButton>
+  <ChevronLeftIcon onClick={() => { setleft(left - 1); setright(right - 1); }} />
+</IconButton>
+<IconButton>
+  <ChevronRightIcon onClick={() => { setleft(left + 1); setright(right + 1); }} />
+</IconButton>
           <IconButton>
             <KeyboardHideIcon />
           </IconButton>
@@ -221,7 +224,7 @@ const addContacts = async () =>{
       </div>
 
       <div className="emailList-list">
-        {emails.map(({ attachments,id,read,priority:priorityString,recipient,sender,subject, textBody, timeStamp }) => (
+        {emails.slice().reverse().slice(15*left, 15*right).map(({ attachments,id,read,priority:priorityString,recipient,sender,subject, textBody, timeStamp }) => (
           <EmailRow
           attachments={attachments}
           id={id}

@@ -25,8 +25,11 @@ function Contact({userName,emailAddress }) {
     navigate("/mail");
   };
 
+  
+
   return (
     <div onClick={openMail} className="emailRow">
+      <Checkbox></Checkbox>
       <h3 className="emailRow-title">{userName}</h3>
     </div>
   );

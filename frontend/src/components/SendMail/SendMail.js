@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./SendMail.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 
 function SendMail() {
-  const [selectedOption, setSelectedOption] = React.useState("Minor");
+  const [selectedOption, setSelectedOption] = useState("Minor");
+  const [send, setsend] = useState();
   const user = useSelector(selectUser);
 
 
@@ -26,6 +27,7 @@ function SendMail() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -33,6 +35,7 @@ function SendMail() {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
+    console.log(data.sendTheEmail);
     formData.append("senderEmail", user.email);
     formData.append("recipientEmail", data.recipientEmail);
     formData.append("subject", data.subject);
@@ -63,6 +66,11 @@ function SendMail() {
       alert("Error sending email.");
     }
   };
+  const handelClose = async () => {
+    setValue("sendTheEmail", false);
+    dispatch(closeSendMessage());
+    handleSubmit(onSubmit)();
+    };
 
   return (
     <div className="sendMail">
@@ -82,7 +90,7 @@ function SendMail() {
           </Select>
         </FormControl>
         <CloseIcon
-          onClick={() => dispatch(closeSendMessage())}
+          onClick={() => handelClose()}
           className="sendMail-close"
         />
       </div>
@@ -91,7 +99,7 @@ function SendMail() {
         <input
           name="recipientEmail"
           placeholder="To"
-          type="email"
+          type="text"
           {...register("recipientEmail", { required: "Recipient email is required!" })}
         />
         {errors.recipientEmail && (
@@ -117,11 +125,15 @@ function SendMail() {
           <p className="sendMail-error">{errors.textBody.message}</p>
         )}
         <input
+        type="hidden"
+        value="true"
+        {...register("sendTheEmail")}
+        />
+        <input
           type="file"
           multiple
           onChange={(e) => {
-            const files = e.target.files; // Get FileList
-            // Manually attach files to the form data
+            const files = e.target.files;
             e.target.setCustomValidity("");
             register("attachments").onChange({
               target: { name: "attachments", value: files },
@@ -129,11 +141,6 @@ function SendMail() {
           }}
           className="sendMail-fileInput"
           />
-                <input
-        type="hidden"
-        value="true"
-        {...register("sendTheEmail")}
-        />
         <div className="sendMail-options">
           <Button
             type="submit"
