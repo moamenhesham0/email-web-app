@@ -28,7 +28,40 @@ function Header() {
     ]; // All the specified categories
     const folderName = folderType; // Define the folder to search in
     console.log(folderName);
-
+    if(folderName === "Contacts"){
+      try {
+        const results = [];
+          // Perform a search for each criterion
+          const formData = new FormData();
+          formData.append("emailAddress", emailAddress);
+          formData.append("query", searchInput);
+  
+          const response = await fetch("http://localhost:8080/api/user/searchContacts", {
+            method: "POST",
+            body: formData,
+          });
+  
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            results.push(...data);
+          } else {
+            console.error(`Search failed for:`, response.statusText);
+          }
+        if (results.length > 0) {
+          dispatch(
+            login({
+              ...user,
+              emails: results,
+              Csearch: true,
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Error performing search:", error);
+      }
+    }
+    else{
     try {
       const results = [];
       for (const searchBy of searchByCriteria) {
@@ -57,13 +90,14 @@ function Header() {
           login({
             ...user,
             emails: results,
-            search: true,
+            Esearch: true,
           })
         );
       }
     } catch (error) {
       console.error("Error performing search:", error);
     }
+  }
   };
 
   return (
