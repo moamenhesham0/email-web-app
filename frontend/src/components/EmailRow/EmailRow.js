@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./EmailRow.css";
 import { Checkbox, IconButton } from "@mui/material";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -12,16 +12,24 @@ import { useSelectedEmails } from "../Context/selectedEmailsContext";
 function EmailRow({ id, isChecked, attachments, priority, read, recipient, sender, subject, textBody, timeStamp }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { selectedEmails, toggleEmailSelection } = useSelectedEmails(); // Use the context
-  const [checked , setCheck] = useState(selectedEmails.includes(id));
+  const { selectedEmails, removeEmail , addEmail } = useSelectedEmails(); // Use the context
+  const [checked , setCheck] = useState(isChecked);
 
   const openMail = () => {
     dispatch(selectMail({ attachments, id, priority, read, recipient, sender, subject, textBody, timeStamp }));
     navigate("/mail");
   };
 
+  useEffect(() => {
+    setCheck(isChecked); // Update checked state when isChecked prop changes
+  }, [isChecked]);
+
   const handleCheckboxChange = () => {
-    toggleEmailSelection(id); // Toggle email selection on checkbox change
+    if(checked) // Toggle email selection on checkbox change
+      removeEmail(id);
+    else{
+      addEmail(id);
+    }
     setCheck(!checked);
   };
   

@@ -33,7 +33,7 @@ function EmailList() {
   const type = useSelector(selectedType);
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
-  const { selectedEmails, selectAllEmails, deselectAllEmails } = useSelectedEmails();
+  const { selectedEmails, removeEmail, addEmail } = useSelectedEmails();
 
 
 const addContacts = async () =>{
@@ -158,21 +158,25 @@ const addContacts = async () =>{
 
     const handleSelectAll = () => {
       if (selectedEmails.length === emails.length) {
-        deselectAllEmails(); // Uncheck all if already all are selected
+        emails.forEach(email => {
+          removeEmail(email.id);
+        }); // Uncheck all if already all are selected
       } else {
         // Create a new array of email IDs for selection
-        selectAllEmails(emails.map((email) => email.id)); // Select all emails
+        emails.forEach(email => {
+          addEmail(email.id);
+        }); // Select all emails
       }
     };
     
-    const isAllSelected = emails.every(({ id }) => selectedEmails.includes(id));
+    
           return (
             <div className="emailList">
               <div className="emailList-settings">
               <div className="emailList-settingsLeft">
               <Checkbox
               checked={selectedEmails.length === emails.length}
-              onChange={handleSelectAll}
+              onClick={handleSelectAll}
             />
           <IconButton>
             <ArrowDropDownIcon />
@@ -193,7 +197,7 @@ const addContacts = async () =>{
           <IconButton>
             <MoreVertIcon />
           </IconButton>
-          {selectedEmails.length > 0 && ( // Conditionally render Delete button
+          {selectedEmails.length != 0 && ( // Conditionally render Delete button
             <IconButton >
               <DeleteIcon />
             </IconButton>
@@ -227,6 +231,7 @@ const addContacts = async () =>{
           sender={sender}
           subject={subject}
           textBody={textBody}
+          isChecked={selectedEmails.includes(id)}
           timeStamp={timeStamp}
           />
         ))}

@@ -13,36 +13,32 @@ export const SelectedEmailsProvider = ({ children }) => {
   const [selectedEmails, setSelectedEmails] = useState([]);
 
   // Function to add an email to the selection
-  const addEmail = (emailId) => {
-    setSelectedEmails((prev) => [...prev, emailId]);
-  };
+ // Function to add an email to the selection (if not already added)
+const addEmail = (emailId) => {
+  setSelectedEmails((prev) => {
+    // Only add email if it's not already in the selected list
+    if (!prev.includes(emailId)) {
+      return [...prev, emailId];
+    }
+    // If the emailId is already present, skip
+    return prev;
+  });
+};
 
-  // Function to remove an email from the selection
-  const removeEmail = (emailId) => {
-    setSelectedEmails((prev) => prev.filter((id) => id !== emailId));
-  };
+// Function to remove an email from the selection (if it's already selected)
+const removeEmail = (emailId) => {
+  setSelectedEmails((prev) => {
+    // Only remove email if it's in the selected list
+    if (prev.includes(emailId)) {
+      return prev.filter((id) => id !== emailId);
+    }
+    // If the emailId is not in the list, skip
+    return prev;
+  });
+};
 
-  // Function to toggle email selection
-  const toggleEmailSelection = (emailId) => {
-    setSelectedEmails((prevSelectedEmails) => {
-      // If the email is already selected, remove it from the selection
-      if (prevSelectedEmails.includes(emailId)) {
-        return prevSelectedEmails.filter((id) => id !== emailId);
-      }
-      // If the email is not selected, add it to the selection
-      return [...prevSelectedEmails, emailId];
-    });
-  };
 
-  // Function to select all emails
-  const selectAllEmails = (emailIds) => {
-    setSelectedEmails(emailIds);
-  };
 
-  // Function to unselect all emails
-  const deselectAllEmails = () => {
-    setSelectedEmails([]);
-  };
 
   return (
     <SelectedEmailsContext.Provider
@@ -50,9 +46,6 @@ export const SelectedEmailsProvider = ({ children }) => {
         selectedEmails,
         addEmail,
         removeEmail,
-        toggleEmailSelection,
-        selectAllEmails,
-        deselectAllEmails,
       }}
     >
       {children}
