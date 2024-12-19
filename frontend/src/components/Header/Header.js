@@ -4,15 +4,17 @@ import "./Header.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../features/userSlice";
+import { useDispatch } from "react-redux";
+import { login, selectUser } from "../../features/userSlice";
+
 
 function Header() {
   const [searchInput, setSearchInput] = useState(""); // To hold the search keyword
-  const [searchResults, setSearchResults] = useState([]); // To store the unique search results
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
   const handleSearch = async () => {
-    const emailAddress = user.emailAddress; // Replace with the logged-in user's email address
+    const emailAddress = user.email; // Replace with the logged-in user's email address
     const searchByCriteria = [
       "body",
       "subject",
@@ -25,9 +27,7 @@ function Header() {
     const folderName = "Inbox"; // Define the folder to search in
 
     try {
-      const emailSet = new Set(); // To ensure unique emails
-      const results = []; // To store unique results
-
+      const results = [];
       for (const searchBy of searchByCriteria) {
         // Perform a search for each criterion
         const formData = new FormData();
@@ -43,19 +43,21 @@ function Header() {
 
         if (response.ok) {
           const data = await response.json();
-          data.forEach((email) => {
-            if (!emailSet.has(email.id)) {
-              emailSet.add(email.id);
-              results.push(email);
-            }
-          });
+          console.log(data);
+          results.push(...data);
         } else {
           console.error(`Search failed for ${searchBy}:`, response.statusText);
         }
       }
-
-      setSearchResults(results); // Store the unique results
-      console.log("Unique search results:", results);
+      if (results.length > 0) {
+        dispatch(
+          login({
+            ...user,
+            emails: results,
+            search: true,
+          })
+        );
+      }
     } catch (error) {
       console.error("Error performing search:", error);
     }
@@ -81,19 +83,6 @@ function Header() {
       </div>
       <div className="header-right">
         <Avatar />
-      </div>
-      <div className="search-results">
-        {searchResults.length > 0 ? (
-          <ul>
-            {searchResults.map((email) => (
-              <li key={email.id}>
-                <strong>{email.subject}</strong> - {email.sender}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No results found</p>
-        )}
       </div>
     </div>
   );

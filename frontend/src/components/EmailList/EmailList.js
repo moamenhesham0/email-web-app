@@ -70,7 +70,15 @@ const addContacts = async () =>{
 }
 
   useEffect(() => {
-    console.log(user.emails);
+    if(user.search){
+      setEmails(user.emails)
+                dispatch(
+                          login({
+                            ...user,
+                            search: false,
+                          })
+                      );
+    }
     if(!user.emails){
       fetchEmails();
     }

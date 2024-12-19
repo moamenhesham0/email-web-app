@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { selectMail } from "../../features/mailSlice";
 import {useState} from 'react';
 import { useSelectedEmails } from "../Context/selectedEmailsContext";
+import { openSendMessage, selectType } from "../../features/mailSlice";
+
 
 function EmailRow({ id, isChecked, attachments, priority, read, recipient, sender, subject, textBody, timeStamp }) {
   const navigate = useNavigate();
@@ -18,6 +20,9 @@ function EmailRow({ id, isChecked, attachments, priority, read, recipient, sende
   const openMail = () => {
     dispatch(selectMail({ attachments, id, priority, read, recipient, sender, subject, textBody, timeStamp }));
     navigate("/mail");
+    if(!subject || !textBody){
+      dispatch(openSendMessage());
+    }
   };
 
   useEffect(() => {
