@@ -7,6 +7,7 @@ import RedoIcon from "@mui/icons-material/Redo";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import KeyboardHideIcon from "@mui/icons-material/KeyboardHide";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EmailRow from "../EmailRow/EmailRow";
 import Contact from "../Contacts/contact";
@@ -14,7 +15,8 @@ import { useSelector } from "react-redux";
 import { login, selectUser } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { openSendMessage, selectedType } from "../../features/mailSlice";
-import { Button,TextField,Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { useSelectedEmails } from "../Context/selectedEmailsContext";
+import { Button,TextField,Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 
@@ -31,6 +33,8 @@ function EmailList() {
   const type = useSelector(selectedType);
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
+  const { selectedEmails, selectAllEmails, deselectAllEmails } = useSelectedEmails();
+
 
 const addContacts = async () =>{
   // console.log(emailAddress);
@@ -77,6 +81,7 @@ const addContacts = async () =>{
       );
     }
   }, [user, type]);
+
 
   const fetchContacts = async ()=>{
     setEmails([]);
@@ -151,27 +156,50 @@ const addContacts = async () =>{
       }
     };
 
-  return (
-    <div className="emailList">
-      <div className="emailList-settings">
-        <div className="emailList-settingsLeft">
-          <Checkbox />
+    const handleSelectAll = () => {
+      if (selectedEmails.length === emails.length) {
+        deselectAllEmails(); // Uncheck all if already all are selected
+      } else {
+        // Create a new array of email IDs for selection
+        selectAllEmails(emails.map((email) => email.id)); // Select all emails
+      }
+    };
+    
+    const isAllSelected = emails.every(({ id }) => selectedEmails.includes(id));
+          return (
+            <div className="emailList">
+              <div className="emailList-settings">
+              <div className="emailList-settingsLeft">
+              <Checkbox
+              checked={selectedEmails.length === emails.length}
+              onChange={handleSelectAll}
+            />
           <IconButton>
             <ArrowDropDownIcon />
           </IconButton>
-          {!iscontacts &&<IconButton onClick={()=> fetchEmails()}>
-            <RedoIcon />
-          </IconButton>}
-          {iscontacts &&<Button
-        startIcon={<AddIcon fontSize="large" />}
-        onClick={() => setOpenDialog(true)}
-      >
-        Add Contact
-      </Button>}
+          {!iscontacts && (
+            <IconButton onClick={() => fetchEmails()}>
+              <RedoIcon />
+            </IconButton>
+          )}
+          {iscontacts && (
+            <Button
+              startIcon={<AddIcon fontSize="large" />}
+              onClick={() => setOpenDialog(true)}
+            >
+              Add Contact
+            </Button>
+          )}
           <IconButton>
             <MoreVertIcon />
           </IconButton>
+          {selectedEmails.length > 0 && ( // Conditionally render Delete button
+            <IconButton >
+              <DeleteIcon />
+            </IconButton>
+          )}
         </div>
+
         <div className="emailList-settingsRight">
           <IconButton>
             <ChevronLeftIcon />

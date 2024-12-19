@@ -10,55 +10,57 @@ import { login, selectUser } from "./features/userSlice";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSendMessageIsOpen } from "./features/mailSlice";
-
+import { SelectedEmailsProvider } from "./components/Context/selectedEmailsContext"; 
 
 function App() {
   const user = useSelector(selectUser);
   const sendMessageIsOpen = useSelector(selectSendMessageIsOpen);
 
   return (
-    <Router>
-      {!user ? (
-        <Routes>
-              <Route path="/" element={<Login/>} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route
-                path="*"
-                element={
-                  ["/signup", "/"].includes(window.location.pathname) ? (
-                    <Login />
-                  ) : (
-                    <Login />
-                  )
-                }
-              />
-            </Routes>
+    <SelectedEmailsProvider> {/* Wrap the app with the provider */}
+      <Router>
+        {!user ? (
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="*"
+              element={
+                ["/signup", "/"].includes(window.location.pathname) ? (
+                  <Login />
+                ) : (
+                  <Login />
+                )
+              }
+            />
+          </Routes>
         ) : (
-        <div className="app">
-          <Header />
-          <div className="app-body">
-            <Sidebar />
-            
-            <Routes>
-              <Route path="/emaillist" element={<EmailList />} />
-              <Route path="/mail" element={<Mail />} />
-              <Route
-                path="*"
-                element={
-                  ["/emaillist", "/mail"].includes(window.location.pathname) ? (
-                    <EmailList />
-                  ) : (
-                    <EmailList />
-                  )
-                }
-              />
-            </Routes>
-          </div>
+          <div className="app">
+            <Header />
+            <div className="app-body">
+              <Sidebar />
+              
+              <Routes>
+                <Route path="/emaillist" element={<EmailList />} />
+                <Route path="/mail" element={<Mail />} />
+                <Route
+                  path="*"
+                  element={
+                    ["/emaillist", "/mail"].includes(window.location.pathname) ? (
+                      <EmailList />
+                    ) : (
+                      <EmailList />
+                    )
+                  }
+                />
+              </Routes>
+            </div>
 
-          {sendMessageIsOpen && <SendMail />}
-        </div>
-      )}
-    </Router>
+            {sendMessageIsOpen && <SendMail />}
+          </div>
+        )}
+      </Router>
+    </SelectedEmailsProvider>
   );
 }
 
