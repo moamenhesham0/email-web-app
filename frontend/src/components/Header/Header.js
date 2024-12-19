@@ -63,6 +63,7 @@ function Header() {
     }
     else{
     try {
+      const emailSet = new Set();
       const results = [];
       for (const searchBy of searchByCriteria) {
         // Perform a search for each criterion
@@ -80,7 +81,12 @@ function Header() {
         if (response.ok) {
           const data = await response.json();
           console.log(data);
-          results.push(...data);
+          data.forEach((email) => {
+            if (!emailSet.has(email.id)) {
+              emailSet.add(email.id);
+              results.push(...email);
+            }
+          });
         } else {
           console.error(`Search failed for ${searchBy}:`, response.statusText);
         }
