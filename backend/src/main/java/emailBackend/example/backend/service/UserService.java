@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,8 @@ public class UserService {
         .setTextBody(textBody)
         .setAttachments(attachments)
         .setPriority(priorityGet)
+        .setId(UUID.randomUUID().toString())
+        .setTimeStamp(ZonedDateTime.now().format(FORMATTER))
         .build();
         if (!sendTheEmail) {
             profile.getFolders().get(2).getEmails().add(email);
