@@ -136,6 +136,15 @@ public class UserController {
         userService.setPriority(loginUser, folderName, id, priority);
         
     }
+
+
+    @GetMapping("/folderSize")
+    public int getFolderSize(@RequestParam("emailAddress") String emailAddress, @RequestParam("folderName") String folderName) {
+        User loginUser = emailAppRepository.getUserByEmail(emailAddress);
+        return userService.getFolderSize(loginUser, folderName);
+    }
+    
+
     
     
 }

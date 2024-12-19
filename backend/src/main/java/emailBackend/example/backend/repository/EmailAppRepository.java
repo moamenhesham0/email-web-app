@@ -19,10 +19,18 @@ public class EmailAppRepository {
     private Map<String, User> usersInSystem;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public EmailAppRepository() {
+    private static EmailAppRepository instance;
+
+    private EmailAppRepository() {
         usersInSystem = loadUsersFromFile();
     }
 
+    public static synchronized EmailAppRepository getInstance() {
+        if (instance == null) {
+            instance = new EmailAppRepository();
+        }
+        return instance;
+    }
 
     public User getUserByEmail(String emailAddress){
         if (usersInSystem.containsKey(emailAddress)) {

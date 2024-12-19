@@ -1,14 +1,16 @@
 package emailBackend.example.backend.service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import emailBackend.example.backend.classes.Folder;
 import emailBackend.example.backend.classes.User;
 import emailBackend.example.backend.repository.EmailAppRepository;
+import emailBackend.example.backend.validation.DefaultFoldersHandler;
+import emailBackend.example.backend.validation.EmailCheckHandler;
+import emailBackend.example.backend.validation.SaveUserHandler;
+import emailBackend.example.backend.validation.UserContext;
+import emailBackend.example.backend.validation.UserHandler;
 
 
 @Service
@@ -32,24 +34,21 @@ public class EmailAppService {
 
     public void saveUser(String userName, String email, String password) {
 
-        if (emailAppRepository.signupCheck(email)) {
-            throw new IllegalStateException("Email is taken");
-        }
+        UserHandler emailCheckHandler = new EmailCheckHandler(emailAppRepository);
+        UserHandler defaultFoldersHandler = new DefaultFoldersHandler();
+        UserHandler saveUserHandler = new SaveUserHandler(emailAppRepository);
 
-        List<Folder> defaultFolders = new ArrayList<>();
-        defaultFolders.add(new Folder.Builder().setFolderName("Inbox").build());
-        defaultFolders.add(new Folder.Builder().setFolderName("Sent").build());
-        defaultFolders.add(new Folder.Builder().setFolderName("Draft").build());
-        defaultFolders.add(new Folder.Builder().setFolderName("Trash").build());
-        User user = new User.Builder()
-        .setUsername(userName)
-        .setEmailAddress(email)
-        .setPassword(password)
-        .setFolders(defaultFolders)
-        .setContacts(new ArrayList<>())
-        .build();
+        emailCheckHandler.setNext(defaultFoldersHandler);
+        defaultFoldersHandler.setNext(saveUserHandler);
 
-       emailAppRepository.saveUserInSystem(user);
+        // Create the context
+        UserContext context = new UserContext();
+        context.setUserName(userName);
+        context.setEmail(email);
+        context.setPassword(password);
+
+        // Start the chain
+        emailCheckHandler.handle(context);
     }
 
     public void signUserOut() {
