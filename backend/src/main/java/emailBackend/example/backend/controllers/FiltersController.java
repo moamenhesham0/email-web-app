@@ -27,7 +27,7 @@ public class FiltersController {
     @Autowired
     private EmailAppRepository emailAppRepository;
 
-    @PostMapping("/emails")
+    @PostMapping("/filter")
     public List<Email> searchEmails(
             @RequestParam("emailAddress") String emailAddress,
             @RequestParam("searchBy") String searchBy,

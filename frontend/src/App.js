@@ -11,12 +11,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSendMessageIsOpen } from "./features/mailSlice";
 import { SelectedEmailsProvider } from "./components/Context/selectedEmailsContext"; 
-
+import {SelectedContactsProvider} from "./components/Contacts/contactContext"
 function App() {
   const user = useSelector(selectUser);
   const sendMessageIsOpen = useSelector(selectSendMessageIsOpen);
 
   return (
+    <SelectedContactsProvider>
     <SelectedEmailsProvider> {/* Wrap the app with the provider */}
       <Router>
         {!user ? (
@@ -61,6 +62,7 @@ function App() {
         )}
       </Router>
     </SelectedEmailsProvider>
+    </SelectedContactsProvider>
   );
 }
 

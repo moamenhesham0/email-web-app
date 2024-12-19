@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./contact.css";
 import { Checkbox, IconButton } from "@mui/material";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -6,14 +6,15 @@ import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlin
 import { useNavigate } from 'react-router-dom';
 import { selectMail } from "../../features/mailSlice";
 import { useDispatch } from "react-redux";
+import { useSelectedContacts } from "./contactContext";
 import EditIcon from "@mui/icons-material/Edit";
 
 
 function Contact({userName,emailAddress }) {
-
+  const {selectedContacts , addContact , removeContact} = useSelectedContacts();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [checked , setCheck] = useState(selectedContacts.includes(userName))
   const openMail = () => {
     console.log(emailAddress)
     const sender = userName;
@@ -27,15 +28,25 @@ function Contact({userName,emailAddress }) {
     navigate("/mail");
   };
 
-  
+  const handleCheckboxChange = () => {
+    if(checked) // Toggle email selection on checkbox change
+      removeContact(userName);
+    else{
+      addContact(userName);
+    }
+    setCheck(!checked);
+  };
 
   return (
-    <div onClick={openMail} className="emailRow">
-      <Checkbox></Checkbox>
+    <div  className="emailRow">
+      <Checkbox
+                checked={checked}
+                onChange={handleCheckboxChange}
+              />
       <IconButton>
         <EditIcon fontSize="small" />
       </IconButton>
-      <h3 className="emailRow-title">{userName}</h3>
+      <h3 onClick={openMail} className="emailRow-title">{userName}</h3>
     </div>
   );
 }

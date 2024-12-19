@@ -36,6 +36,9 @@ const removeEmail = (emailId) => {
     return prev;
   });
 };
+const clear = ()=>{
+  setSelectedEmails([]);
+}
 
 
 
@@ -46,6 +49,7 @@ const removeEmail = (emailId) => {
         selectedEmails,
         addEmail,
         removeEmail,
+        clear,
       }}
     >
       {children}

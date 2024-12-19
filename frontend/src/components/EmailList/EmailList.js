@@ -16,6 +16,7 @@ import { login, selectUser } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { openSendMessage, selectedType } from "../../features/mailSlice";
 import { useSelectedEmails } from "../Context/selectedEmailsContext";
+import { useSelectedContacts } from "../Contacts/contactContext";
 import { Button,TextField,Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -39,6 +40,7 @@ function EmailList() {
   const type = useSelector(selectedType);
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
+  const { selectedContacts, removeContact, addContact } = useSelectedContacts();
   const { selectedEmails, removeEmail, addEmail } = useSelectedEmails();
   const [left, setleft] = useState(0);
   const [right, setright] = useState(1);
@@ -268,16 +270,32 @@ const addContacts = async () =>{
         alert("Failed to delete emails. Please try again.");
       }
     };
+    const handleSelectAllContacts = () => {
+      if (selectedContacts.length === contacts.length) {
+        contacts.forEach(contact => {
+          removeContact(contact.userName);
+        }); // Uncheck all if already all are selected
+      } else {
+        // Create a new array of email IDs for selection
+        contacts.forEach(contact => {
+          addContact(contact.userName);
+        }); // Select all emails
+      }
+    };
     
     
           return (
             <div className="emailList">
               <div className="emailList-settings">
               <div className="emailList-settingsLeft">
-              <Checkbox
+              {!iscontacts &&(<Checkbox
               checked={selectedEmails.length === emails.length}
               onClick={handleSelectAll}
-            />
+            />)}
+             {iscontacts && (<Checkbox
+              checked={selectedContacts.length === contacts.length}
+              onClick={handleSelectAllContacts}
+            />)} 
           <IconButton>
             <ArrowDropDownIcon />
           </IconButton>
@@ -298,7 +316,7 @@ const addContacts = async () =>{
             <MoreVertIcon />
           </IconButton>
           {selectedEmails.length != 0 && ( // Conditionally render Delete button
-            <IconButton onClick={deleteSelectedEmails}>
+            <IconButton >
               <DeleteIcon />
             </IconButton>
           )}
@@ -348,10 +366,11 @@ const addContacts = async () =>{
           timeStamp={timeStamp}
           />
         ))}
-        {contacts.slice().reverse().slice(15*left, 15*right).map(({ userName,emailAdress }) => (
+        {contacts.map(({ userName,emailAdress }) => (
           <Contact
           userName={userName}
           emailAddress={emailAdress}
+          Checked={selectedContacts.includes(userName)}
           />
         ))}
 

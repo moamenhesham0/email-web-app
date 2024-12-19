@@ -13,7 +13,7 @@ public class SenderFilter implements Filter {
         List<Email> filteredEmails = new ArrayList<>();
         for(Email email : emails)
         {
-            if(email.getRecipient().equalsIgnoreCase(sender))
+            if(email.getSender().equalsIgnoreCase(sender))
                 filteredEmails.add(email);
         }
         return filteredEmails;
