@@ -180,6 +180,38 @@ const addContacts = async () =>{
       }
     };
     
+
+    const deleteSelectedEmails = async () => {
+      if (selectedEmails.length === 0) {
+        alert("No emails selected for deletion.");
+        return;
+      }
+    
+      const formData = new URLSearchParams({
+        emailAddress: user.email,
+        folderName: type,
+      });
+    
+      selectedEmails.forEach((id) => formData.append("ids", id));
+    
+      try {
+        const response = await fetch(`http://localhost:8080/api/user/deleteEmail?${formData.toString()}`, {
+          method: "DELETE",
+        });
+    
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(errorDetails.message);
+        }
+    
+        alert("Emails deleted successfully.");
+        fetchEmails(); // Refresh the email list
+      } catch (error) {
+        console.error("Error deleting emails:", error);
+        alert("Failed to delete emails. Please try again.");
+      }
+    };
+    
     
           return (
             <div className="emailList">
@@ -209,7 +241,7 @@ const addContacts = async () =>{
             <MoreVertIcon />
           </IconButton>
           {selectedEmails.length != 0 && ( // Conditionally render Delete button
-            <IconButton >
+            <IconButton onClick={deleteSelectedEmails}>
               <DeleteIcon />
             </IconButton>
           )}
