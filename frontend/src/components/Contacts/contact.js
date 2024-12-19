@@ -6,6 +6,8 @@ import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlin
 import { useNavigate } from 'react-router-dom';
 import { selectMail } from "../../features/mailSlice";
 import { useDispatch } from "react-redux";
+import EditIcon from "@mui/icons-material/Edit";
+
 
 function Contact({userName,emailAddress }) {
 
@@ -30,6 +32,9 @@ function Contact({userName,emailAddress }) {
   return (
     <div onClick={openMail} className="emailRow">
       <Checkbox></Checkbox>
+      <IconButton>
+        <EditIcon fontSize="small" />
+      </IconButton>
       <h3 className="emailRow-title">{userName}</h3>
     </div>
   );
