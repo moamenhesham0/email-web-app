@@ -32,8 +32,36 @@ function EmailList() {
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
 
+const addContacts = async () =>{
+  // console.log(emailAddress);
+  // const newContact = {
+  //   userName: contactName,
+  //   emailAdress: emailAddress,
+  // };
+  // console.log(newContact);
 
-  
+  // setcontacts((prevContacts) => [...prevContacts, newContact]);
+
+  setOpenDialog(false)
+  const formData = new FormData();
+      formData.append("emailAddress", user.email)
+      formData.append("userName", contactName)
+      formData.append("emailAddressesContact", emailAddress)
+      try {
+            const response = await fetch("http://localhost:8080/api/user/addContact", {
+              method: "POST",
+              body: formData,
+            });
+            if (!response.ok) {
+              const errorDetails = await response.json();
+              throw new Error(errorDetails.message);
+            }
+          } catch (error) {
+            console.error(error);
+            }
+  fetchContacts();
+}
+
   useEffect(() => {
     console.log(user.emails);
     if(!user.emails){
@@ -204,7 +232,7 @@ function EmailList() {
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Cancel
           </Button>
-          <Button  color="primary">
+          <Button onClick={()=>addContacts()} color="primary">
             Add
           </Button>
         </DialogActions>

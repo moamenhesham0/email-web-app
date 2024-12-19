@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
+
+
 function Sidebar() {
   const dispatch = useDispatch();
   const [selected,setselected] = useState(true);
@@ -25,6 +27,9 @@ function Sidebar() {
   const [folderName, setFolderName] = useState("");
   const [folders, setFolders] = useState([]);
   const [isfolder, setisfolder] = useState(true);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+const [currentFolder, setCurrentFolder] = useState("");
+const [newFolderName, setNewFolderName] = useState("");
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -52,6 +57,31 @@ function Sidebar() {
   
     fetchFolders();
   }, [isfolder, user]);
+
+  const handleDeleteFolder = async (folderName) => {
+    try {
+      const queryParams = new URLSearchParams({
+        emailAddress: user.email,
+        folderName: folderName,
+      });
+  
+      const response = await fetch(`http://localhost:8080/api/user/deleteFolder?${queryParams}`, {
+        method: "DELETE",
+      });
+  
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message);
+      }
+  
+      // Update the folders state
+      setFolders((prevFolders) => prevFolders.filter((folder) => folder !== folderName));
+      console.log("Folder Deleted:", folderName);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete folder. Please try again.");
+    }
+  };
 
 const handleContacts = () => {
   setselected(false);
@@ -100,79 +130,39 @@ const handleContacts = () => {
     setFolderName("");
     setOpenDialog(false);
   };
-  
-
-  const handleDeleteFolder = async (folderName) => {
+  const handleOpenRenameDialog = (folder) => {
+    setCurrentFolder(folder);
+    setNewFolderName(folder);
+    setRenameDialogOpen(true);
+  };
+  // Function to rename a folder
+  const handleRenameFolder = async () => {
     try {
       const queryParams = new URLSearchParams({
         emailAddress: user.email,
-        folderName: folderName,
+        folderName: currentFolder,
+        folderNewName: newFolderName,
       });
-  
-      const response = await fetch(`http://localhost:8080/api/user/deleteFolder?${queryParams}`, {
-        method: "DELETE",
+      const response = await fetch(`http://localhost:8080/api/user/renameFolder?${queryParams}`, {
+        method: "POST",
       });
-  
       if (!response.ok) {
         const errorDetails = await response.json();
         throw new Error(errorDetails.message);
       }
-  
-      // Update the folders state
-      setFolders((prevFolders) => prevFolders.filter((folder) => folder !== folderName));
-      console.log("Folder Deleted:", folderName);
+      // Update folders state with the new folder name
+      setFolders((prevFolders) =>
+        prevFolders.map((folder) =>
+          folder === currentFolder ? newFolderName : folder
+        )
+      );
+      console.log("Folder Renamed:", currentFolder, "->", newFolderName);
+      setRenameDialogOpen(false);
     } catch (error) {
       console.error(error);
-      alert("Failed to delete folder. Please try again.");
+      alert("Failed to rename folder. Please try again.");
     }
   };
-
-
-
-  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
-const [currentFolder, setCurrentFolder] = useState("");
-const [newFolderName, setNewFolderName] = useState("");
-
-// Function to handle opening the rename dialog
-const handleOpenRenameDialog = (folder) => {
-  setCurrentFolder(folder);
-  setNewFolderName(folder);
-  setRenameDialogOpen(true);
-};
-
-// Function to rename a folder
-const handleRenameFolder = async () => {
-  try {
-    const queryParams = new URLSearchParams({
-      emailAddress: user.email,
-      folderName: currentFolder,
-      folderNewName: newFolderName,
-    });
-
-    const response = await fetch(`http://localhost:8080/api/user/renameFolder?${queryParams}`, {
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      const errorDetails = await response.json();
-      throw new Error(errorDetails.message);
-    }
-
-    // Update folders state with the new folder name
-    setFolders((prevFolders) =>
-      prevFolders.map((folder) =>
-        folder === currentFolder ? newFolderName : folder
-      )
-    );
-
-    console.log("Folder Renamed:", currentFolder, "->", newFolderName);
-    setRenameDialogOpen(false);
-  } catch (error) {
-    console.error(error);
-    alert("Failed to rename folder. Please try again.");
-  }
-};
-  
   return (
     <div className="sidebar">
       <div>
@@ -200,7 +190,7 @@ const handleRenameFolder = async () => {
         />
 
       <SidebarOption
-      
+      Icon={StarIcon} 
       title="Trash" 
       number={12} 
       onClick={() => handleOptionClick("Trash")}
@@ -234,7 +224,7 @@ const handleRenameFolder = async () => {
       onClick={() => handleContacts()}
       selected={selectedOption === "Contacts"}
       />
-   {folders.map((folder, index) => (
+      {folders.map((folder, index) => (
   <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
     {/* SidebarOption to show the folder name */}
     <SidebarOption
@@ -262,8 +252,6 @@ const handleRenameFolder = async () => {
     </div>
   </div>
 ))}
-
-
       
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Create a Folder</DialogTitle>
