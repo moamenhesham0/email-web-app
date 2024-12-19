@@ -8,15 +8,15 @@ import emailBackend.example.backend.classes.Email;
 public class PrioritySearch implements SearchStrategy {
     @Override
     public List<Email> search(List<Email> emails, String keyword) {
-        int priorityLevel;
+        //int priorityLevel;
         try {
-            priorityLevel = Integer.parseInt(keyword);
+            //priorityLevel = Integer.parseInt(keyword);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Keyword must be a valid number for priority search.");
         }
 
         return emails.stream()
-                .filter(email -> email.getPriority().getPriorityInt() == priorityLevel)
+                .filter(email -> email.getPriority().getPriorityString() == keyword)
                 .collect(Collectors.toList());
     }
 }
