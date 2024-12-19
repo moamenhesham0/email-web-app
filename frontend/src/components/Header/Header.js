@@ -7,6 +7,12 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login, selectUser } from "../../features/userSlice";
 import { selectedType, selectType } from "../../features/mailSlice"; 
+import {
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 
 function Header() {
@@ -14,7 +20,11 @@ function Header() {
   const user = useSelector(selectUser);
   const folderType = useSelector(selectedType);
   const dispatch = useDispatch();
-
+const [selectedOption, setSelectedOption] = useState("");
+  const handleOptionChange = (value) => {
+  setSelectedOption(value);
+    handleSort(selectedOption);
+  }
   const handleSearch = async () => {
     const emailAddress = user.email; // Replace with the logged-in user's email address
     const searchByCriteria = [
@@ -104,16 +114,17 @@ function Header() {
     }
   }
   };
-  const handleSort = async (sortBy, order) => {
+  const handleSort = async (sortBy) => {
     const emailAddress = user.email; // Replace with the logged-in user's email address
     const folderName = folderType; // Define the folder to sort in
   
     try {
       const formData = new FormData();
+      console.log(sortBy);
       formData.append("emailAddress", emailAddress);
       formData.append("sortBy", sortBy);
       formData.append("folderName", folderName);
-      formData.append("order", order); // Pass sorting order (true for ascending, false for descending)
+      formData.append("order", false); // Pass sorting order (true for ascending, false for descending)
   
       const response = await fetch("http://localhost:8080/api/sort/emails", {
         method: "POST",
@@ -123,13 +134,11 @@ function Header() {
       if (response.ok) {
         const sortedEmails = await response.json();
         console.log("Sorted Emails:", sortedEmails);
-  
-        // Dispatch the sorted emails to the Redux store
         dispatch(
           login({
             ...user,
             emails: sortedEmails,
-            sorted: true,
+            Esearch: true,
           })
         );
       } else {
@@ -156,7 +165,24 @@ function Header() {
           onChange={(e) => setSearchInput(e.target.value)} // Update the searchInput state
         />
         <button onClick={handleSearch}>Search</button>
+          <FormControl className="sendMail-dropdown" size="small">
+          <InputLabel id="option-select-label">Sort By:</InputLabel>
+          <Select
+            labelId="option-select-label"
+            value={selectedOption}
+            onChange={(event) =>  {handleSort(event.target.value);setSelectedOption(event.target.value)}}
+            >
+            <MenuItem value="body" >body</MenuItem>
+            <MenuItem value="subject">subject</MenuItem>
+            <MenuItem value="sender">sender</MenuItem>
+            <MenuItem value="recipient">recipient</MenuItem>
+            <MenuItem value="priority">priority</MenuItem>
+            <MenuItem value="timestamp">timestamp</MenuItem>
+            <MenuItem value="Attachments">Attachments</MenuItem>
+          </Select>
+        </FormControl>
       </div>
+          
       <div className="header-right">
         <Avatar />
       </div>

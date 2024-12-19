@@ -1,10 +1,12 @@
-.header{
+/* General Header Styles */
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid whitesmoke;
+    border-bottom: 1px solid #e0e0e0;
 }
 
+/* Header Left Section */
 .header-left {
     display: flex;
     align-items: center;
@@ -13,49 +15,106 @@
 .header-left > img {
     object-fit: contain;
     height: 50px;
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
+/* Header Middle Section */
 .header-middle {
     display: flex;
     align-items: center;
     flex: 0.7;
-    background-color: whitesmoke;
+    background-color: #ffffff;
     padding: 8px 15px;
     margin: 10px;
-    border-radius: 10px;
+    border-radius: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .header-middle > .MuiSvgIcon-root {
     color: gray;
+    margin-right: 10px;
 }
 
 .header-middle > input {
+    flex: 1;
     border: none;
-    width: 100%;
     padding: 10px;
     outline: none;
-    font-size: medium;
+    font-size: 16px;
     background-color: transparent;
 }
 
-.header-right{
-    display: flex;
-    padding-right: 20px;
-    align-items: center;
+.header-middle > button {
+    padding: 5px 15px;
+    margin-left: 10px;
+    border: none;
+    background-color: #4285f4;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
+.header-middle > button:hover {
+    background-color: #357ae8;
+}
+
+/* Dropdown Styles */
+.sendMail-dropdown {
+    margin-left: 10px;
+    min-width: 150px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Right Section */
+.header-right {
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.header-right > .MuiAvatar-root {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: 2px solid #4285f4;
+}
+
+/* Media Queries for Responsiveness */
+@media only screen and (max-width: 768px) {
+    .header-middle {
+        flex: 1;
+        margin: 10px 5px;
+    }
+
+    .header-middle > button {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .sendMail-dropdown {
+        min-width: 100px;
+    }
+}
 
 @media only screen and (max-width: 500px) {
-    .header-left > .MuiIconButton-root{
+    .header-left > .MuiIconButton-root {
         display: none !important;
     }
-  
+
     .header-middle {
-        margin: 10px 0px;
-    }  
-    .header-right > .MuiIconButton-root{
-        padding: 5px !important;
-        display: none !important;
+        margin: 10px 0;
     }
-  }
+
+    .header-right {
+        padding-right: 10px;
+    }
+
+    .header-right > .MuiAvatar-root {
+        width: 35px;
+        height: 35px;
+    }
+}

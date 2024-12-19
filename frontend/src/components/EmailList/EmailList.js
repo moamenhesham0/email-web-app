@@ -366,7 +366,7 @@ const addContacts = async () =>{
           timeStamp={timeStamp}
           />
         ))}
-        {contacts.map(({ userName,emailAdress }) => (
+        {contacts.slice().reverse().slice(15*left, 15*right).map(({ userName,emailAdress }) => (
           <Contact
           userName={userName}
           emailAddress={emailAdress}
