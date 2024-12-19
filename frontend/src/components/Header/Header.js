@@ -6,11 +6,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login, selectUser } from "../../features/userSlice";
+import { selectedType, selectType } from "../../features/mailSlice"; 
 
 
 function Header() {
   const [searchInput, setSearchInput] = useState(""); // To hold the search keyword
   const user = useSelector(selectUser);
+  const folderType = useSelector(selectedType);
   const dispatch = useDispatch();
 
   const handleSearch = async () => {
@@ -24,7 +26,8 @@ function Header() {
       "timestamp",
       "attachments",
     ]; // All the specified categories
-    const folderName = "Inbox"; // Define the folder to search in
+    const folderName = folderType; // Define the folder to search in
+    console.log(folderName);
 
     try {
       const results = [];

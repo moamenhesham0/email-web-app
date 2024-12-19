@@ -208,7 +208,7 @@ const addContacts = async () =>{
           <IconButton>
             <MoreVertIcon />
           </IconButton>
-          {selectedEmails.length != 0 && ( // Conditionally render Delete button
+          {selectedEmails.length !== 0 && (
             <IconButton >
               <DeleteIcon />
             </IconButton>

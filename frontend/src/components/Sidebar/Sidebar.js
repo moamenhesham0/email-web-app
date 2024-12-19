@@ -102,6 +102,7 @@ const handleContacts = () => {
                         login({
                           ...user,
                           emails: null,
+                          folder: title,
                         })
                   );
   };
