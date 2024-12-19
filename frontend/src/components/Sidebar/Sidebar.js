@@ -134,7 +134,6 @@ const handleContacts = () => {
   };
 
   const handleCreateFolder = async() => {
-    // You can implement the logic for folder creation here
     try {
       const formData = new FormData();
       formData.append("emailAddress", user.email)

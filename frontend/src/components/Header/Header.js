@@ -23,7 +23,6 @@ function Header() {
       "sender",
       "recipient",
       "priority",
-      "timestamp",
       "attachments",
     ]; // All the specified categories
     const folderName = folderType; // Define the folder to search in
@@ -84,7 +83,7 @@ function Header() {
           data.forEach((email) => {
             if (!emailSet.has(email.id)) {
               emailSet.add(email.id);
-              results.push(...email);
+              results.push(email);
             }
           });
         } else {
