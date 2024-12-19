@@ -104,7 +104,41 @@ function Header() {
     }
   }
   };
-
+  const handleSort = async (sortBy, order) => {
+    const emailAddress = user.email; // Replace with the logged-in user's email address
+    const folderName = folderType; // Define the folder to sort in
+  
+    try {
+      const formData = new FormData();
+      formData.append("emailAddress", emailAddress);
+      formData.append("sortBy", sortBy);
+      formData.append("folderName", folderName);
+      formData.append("order", order); // Pass sorting order (true for ascending, false for descending)
+  
+      const response = await fetch("http://localhost:8080/api/sort/emails", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const sortedEmails = await response.json();
+        console.log("Sorted Emails:", sortedEmails);
+  
+        // Dispatch the sorted emails to the Redux store
+        dispatch(
+          login({
+            ...user,
+            emails: sortedEmails,
+            sorted: true,
+          })
+        );
+      } else {
+        console.error("Sorting failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error performing sort:", error);
+    }
+  };
   return (
     <div className="header">
       <div className="header-left">
