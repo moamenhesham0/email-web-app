@@ -243,7 +243,7 @@ const handleContacts = () => {
         <DeleteIcon fontSize="small" />
       </IconButton>
       <IconButton
-        onClick={() => handleRenameFolder(folder)}
+        onClick={() => handleOpenRenameDialog(folder)}
         aria-label={`Rename ${folder}`}
         size="small"
       >
@@ -273,6 +273,33 @@ const handleContacts = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+    open={renameDialogOpen}
+    onClose={() => setRenameDialogOpen(false)}
+    aria-labelledby="rename-folder-dialog-title"
+  >
+    <DialogTitle id="rename-folder-dialog-title">Rename Folder</DialogTitle>
+    <DialogContent>
+      <TextField
+        autoFocus
+        margin="dense"
+        label="New Folder Name"
+        type="text"
+        fullWidth
+        value={newFolderName}
+        onChange={(e) => setNewFolderName(e.target.value)}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => setRenameDialogOpen(false)} color="secondary">
+        Cancel
+      </Button>
+      <Button onClick={handleRenameFolder} color="primary">
+        Rename
+      </Button>
+    </DialogActions>
+  </Dialog>
     </div>
   );
 }
