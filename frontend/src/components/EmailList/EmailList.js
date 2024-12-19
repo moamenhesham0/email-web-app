@@ -177,17 +177,19 @@ const addContacts = async () =>{
     };
 
     const handleSelectAll = () => {
+      if (emails.length === 0) return; // Do nothing if there are no emails.
+    
       if (selectedEmails.length === emails.length) {
-        emails.forEach(email => {
-          removeEmail(email.id);
-        }); // Uncheck all if already all are selected
+        // Unselect all emails
+        emails.forEach((email) => removeEmail(email.id));
       } else {
-        // Create a new array of email IDs for selection
-        emails.forEach(email => {
-          addEmail(email.id);
-        }); // Select all emails
+        // Select all emails
+        emails.forEach((email) => {
+          if (!selectedEmails.includes(email.id)) addEmail(email.id);
+        });
       }
     };
+    
     
 
     const deleteSelectedEmails = async () => {
@@ -214,6 +216,9 @@ const addContacts = async () =>{
         }
     
         alert("Emails deleted successfully.");
+        emails.forEach(email => {
+          removeEmail(email.id);
+        });
         fetchEmails(); // Refresh the email list
       } catch (error) {
         console.error("Error deleting emails:", error);
@@ -250,7 +255,7 @@ const addContacts = async () =>{
             <MoreVertIcon />
           </IconButton>
           {selectedEmails.length != 0 && ( // Conditionally render Delete button
-            <IconButton >
+            <IconButton onClick={deleteSelectedEmails}>
               <DeleteIcon />
             </IconButton>
           )}
